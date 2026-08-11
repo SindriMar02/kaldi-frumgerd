@@ -1,0 +1,2164 @@
+<!doctype html>
+<html lang="is">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A0E14">
+<title>Bruggsmiðjan Kaldi | Ein vetrarnótt, allur skalinn</title>
+<meta name="description" content="Fyrsta handverksbrugghús á Íslandi, á Árskógssandi síðan 2006. Flettu í gegnum bjórana, sérmerktu flösku eða dós og bókaðu kynningu.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Bruggsmiðjan Kaldi | Ein vetrarnótt, allur skalinn">
+<meta property="og:description" content="Fyrsta handverksbrugghús á Íslandi. Flettu í gegnum bjórana, sérmerktu flösku eða dós og bókaðu kynningu.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/kaldi/snjor.jpg">
+<link rel="icon" type="image/png" href="img/kaldi/logokaldi.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Brewery",
+  "name": "Bruggsmiðjan Kaldi",
+  "alternateName": "Kaldi Brewery",
+  "foundingDate": "2006",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Öldugata 22",
+    "postalCode": "621",
+    "addressLocality": "Árskógssandur",
+    "addressCountry": "IS"
+  },
+  "email": "bruggsmidjan@bruggsmidjan.is",
+  "telephone": "+354 466 2505",
+  "sameAs": [
+    "https://www.bruggsmidjan.is/",
+    "https://www.bjorbodin.is/"
+  ],
+  "employee": [
+    {"@type": "Person", "name": "Agnes Anna Sigurðardóttir", "jobTitle": "Framkvæmdastjóri", "email": "agnes@bruggsmidjan.is"},
+    {"@type": "Person", "name": "Sigurður Bragi Ólafsson", "jobTitle": "Bruggmeistari og stjórnarformaður", "email": "siggi@bruggsmidjan.is"},
+    {"@type": "Person", "name": "Jóhann Már Kristinsson", "jobTitle": "Sölu- og markaðsstjóri", "email": "joi@bruggsmidjan.is"}
+  ],
+  "makesOffer": [
+    {"@type": "Offer", "name": "Kynning í Bruggsmiðjunni", "price": "3500", "priceCurrency": "ISK",
+     "description": "60 mínútna kynning fyrir hópa með smakki beint af dælu."},
+    {"@type": "Offer", "name": "Sérmerktur Kaldi",
+     "description": "Sérmerktar flöskur og dósir fyrir brúðkaup, veislur og fyrirtæki."},
+    {"@type": "Offer", "name": "Bjórkútar með frírri dælu",
+     "description": "Kaup á bjórkútum með frírri dælu fyrir viðburði, brúðkaup og afmæli."}
+  ]
+}
+</script>
+<style>
+@font-face{font-family:'Alpino';src:url('fonts/Alpino-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Alpino';src:url('fonts/Alpino-Black.woff2') format('woff2');font-weight:900;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Medium.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Switzer';src:url('fonts/Switzer-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  color-scheme:dark;
+  --myrkur:#0A0E14;          /* the ground is a winter NIGHT in Eyjafjörður, cold blue-black */
+  --lakk:#EDF2F4;            /* frost white, all body type */
+  --al:#8C9BA8;              /* cold steel secondary */
+  --gull:#C0303A;            /* the constant Kaldi label red, the one fixed accent */
+  --ink:#C8502E;             /* live flavor ink, JS-driven */
+  --disp:'Alpino',sans-serif; --body:'Switzer',sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+section[id]{scroll-margin-top:84px}
+h1,h2,h3{text-wrap:balance}
+.skip{position:absolute;left:-9999px;top:0;z-index:99;background:var(--lakk);color:var(--myrkur);padding:10px 18px;border-radius:0 0 10px 0;font-weight:700}
+.skip:focus-visible{left:0}
+html{scrollbar-width:thin;scrollbar-color:#3A3128 #0A0805}
+body{background:var(--myrkur);color:var(--lakk);font:400 17px/1.6 var(--body);overflow-x:clip}
+h1,h2,h3{font-family:var(--disp);font-weight:600;letter-spacing:.01em;line-height:1.08;text-transform:uppercase}
+a{color:inherit}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+::selection{background:var(--ink);color:var(--myrkur)}
+
+/* ---------- age gate ---------- */
+#gate{position:fixed;inset:0;z-index:90;background:var(--myrkur);display:grid;place-items:center;text-align:center;padding:24px}
+#gate .crest{display:grid;justify-items:center}
+#gate .crest img{height:clamp(120px,20vh,180px);width:auto}
+#gate p{margin:18px 0 30px;color:#A79A88;max-width:36ch}
+#gate .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+#gate button{border:1px solid var(--lakk);background:var(--lakk);color:var(--myrkur);
+  border-radius:999px;padding:14px 30px;font-weight:700;transition:transform .16s var(--ease)}
+#gate button.no{background:transparent;color:var(--lakk)}
+#gate button:active{transform:scale(.97)}
+#gate.hide{display:none}
+#gate .under{margin-top:26px;font-size:13px;color:#6E6355}
+
+/* ---------- nav ---------- */
+.navscrim{position:fixed;inset:0 0 auto;height:140px;z-index:30;pointer-events:none;
+  background:linear-gradient(180deg,rgba(12,9,6,.72),rgba(12,9,6,0))}
+nav{position:fixed;inset:18px 0 auto;z-index:40;display:flex;justify-content:space-between;align-items:center;
+  padding:0 clamp(20px,4vw,56px)}
+nav .mark{display:block}
+nav .mark img{height:58px;width:auto;display:block;transition:opacity .2s}
+nav .mark:hover img{opacity:.85}
+nav .links{display:flex;gap:26px;font-size:14px;font-weight:500;align-items:center}
+nav .links a{display:flex;align-items:center;min-height:44px;white-space:nowrap;text-decoration:none;
+  opacity:.7;transition:opacity .2s}
+nav .links a:hover,nav .links a:focus-visible{opacity:1}
+nav .links a.cta{border:1px solid rgba(237,242,244,.4);border-radius:999px;padding:9px 18px;opacity:1}
+nav .links a.cta:hover{border-color:var(--gull);color:var(--gull)}
+@media(max-width:760px){nav .links a:not(.cta){display:none}}
+
+/* ---------- fixed 3D stage (opaque: aluminium can never read transparent) ---------- */
+#stage{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0}
+#stage canvas{width:100%;height:100%;display:block}
+
+/* content scrolls over the stage */
+section{position:relative;z-index:10}
+.wrapc{max-width:1400px;margin:0 auto;padding:0 clamp(20px,4vw,56px)}
+
+/* ---------- gamme hero: the can carousel ---------- */
+#gamme{height:760vh}   /* the establishing row plus ~95vh of scroll per beer */
+#gamme .hold{position:sticky;top:0;height:100vh;display:grid;align-content:space-between;padding:15vh 0 7vh}
+#gamme h1{font-size:clamp(3.6rem,12vw,11rem);line-height:.92;font-weight:700;text-align:center}
+/* Icelandic diacritics sit ABOVE the cap line. A mask padded only at the bottom
+   guillotines every Ö, Á and Þ, so pad both ends and pull the box back in. */
+#gamme h1 .w{display:inline-block;overflow:hidden;vertical-align:top;
+  padding:.16em .03em .09em;margin:-.16em -.03em -.09em}
+#gamme h1 .w>span{display:inline-block;transform:translateY(135%)}
+/* each letter is coloured independently from the pixels behind it (see wordmark ink) */
+#gamme h1 i{font-style:normal;display:inline-block;color:var(--lakk)}
+
+/* ---------- the journey rail: one continuous pass through the range ---------- */
+/* width:100% is load-bearing: .wrapc's margin auto disables grid stretch, the strip
+   shrink-wraps, and a 1fr column whose only child is absolute collapses to 0 */
+#gamme .strip{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;
+  gap:clamp(20px,4vw,60px);width:100%}
+#gamme .panels .bp{max-width:min(46ch,52vw)}
+#gamme .panels{position:relative;min-height:clamp(150px,20vh,196px)}
+#gamme .bp{position:absolute;inset:auto auto 0 0;width:100%;will-change:opacity,transform}
+#gamme .bp h2{font-size:clamp(2rem,5.4vw,4.2rem);line-height:.95;color:var(--lakk)}
+#gamme .bp .row{display:flex;align-items:baseline;gap:16px;margin-top:10px;flex-wrap:wrap}
+#gamme .bp .abv{font-family:var(--disp);font-weight:700;font-size:clamp(1.1rem,2vw,1.5rem);
+  color:var(--ink);letter-spacing:.02em}
+#gamme .bp p{color:#C4B8A6;max-width:46ch;font-size:clamp(.95rem,1.3vw,1.05rem)}
+#gamme .side{display:grid;justify-items:end;gap:14px}
+#gamme .count{font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:.12em;color:#6E6355;
+  font-variant-numeric:tabular-nums}
+#gamme .count b{color:var(--lakk)}
+#gamme .rail{display:grid;gap:7px}
+#gamme .rail i{display:block;width:2px;height:16px;background:rgba(237,242,244,.18);
+  transition:background .35s var(--ease),height .35s var(--ease)}
+#gamme .rail i.on{background:var(--ink);height:24px}
+#gamme .hint{font-size:12.5px;letter-spacing:.16em;color:#6E6355;font-weight:600;
+  writing-mode:vertical-rl;text-transform:uppercase}
+@media(max-width:760px){#gamme .strip{grid-template-columns:1fr}#gamme .side{justify-items:start}
+  #gamme .rail{grid-auto-flow:column}#gamme .rail i{width:16px;height:2px}
+  #gamme .rail i.on{width:24px;height:2px}#gamme .hint{display:none}}
+
+/* ---------- imagery: their real photography, clip-revealed ---------- */
+.imgw{position:relative;overflow:clip;border-radius:16px}
+.imgw img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center}
+figure figcaption{margin-top:12px;font-size:14px;color:#A79A88}
+
+/* ---------- profile: the label's world ---------- */
+#profil{min-height:110vh;display:grid;align-items:center}
+#profil .copy{max-width:520px}
+#profil h2{font-size:clamp(2rem,4.2vw,3.6rem);max-width:16ch}
+#profil p{margin-top:18px;color:#C4B8A6;max-width:46ch}
+
+/* ---------- benefit chapters ---------- */
+.kafli{min-height:130vh;display:grid;align-items:center}
+.kafli .wrapc{display:grid;width:100%}
+.kafli .copy{max-width:540px;justify-self:end;text-align:right}
+.kafli:nth-of-type(odd) .copy{justify-self:start;text-align:left}
+.kafli h2{font-size:clamp(2.6rem,7vw,5.6rem);color:var(--lakk)}
+.kafli .abv{color:var(--ink);transition:color .4s linear}
+.kafli .abv{font-family:var(--disp);font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;margin-top:6px}
+.kafli p{margin-top:14px;color:#C4B8A6;max-width:38ch;display:inline-block}
+
+/* ---------- argument: the brewer ---------- */
+#rok{min-height:100vh;display:grid;align-items:center;text-align:center}
+#rok .lede{font-family:var(--disp);font-weight:600;text-transform:uppercase;
+  font-size:clamp(1.9rem,4.6vw,3.8rem);line-height:1.14;max-width:26ch;margin:0 auto}
+#rok .lede em{font-style:normal;color:var(--gull)}
+#rok .sub{margin-top:24px;color:#A79A88;max-width:52ch;margin-inline:auto}
+
+/* ---------- brewery: the photographic second act ---------- */
+#hus{padding:0 0 14vh}
+#hus .full{position:relative;height:100vh;display:grid;align-items:end}
+#hus .full .imgw{position:absolute;inset:0;border-radius:0}
+#hus .full .imgw::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(12,9,6,.6),rgba(12,9,6,.1) 42%,rgba(12,9,6,.82))}
+#hus .ftext{position:relative;padding-bottom:9vh;width:100%}
+#hus .ftext h2{font-size:clamp(2.6rem,7vw,5.6rem)}
+#hus .ftext p{margin-top:12px;color:#C9D4DC;max-width:46ch}
+#hus .duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,44px);margin-top:12vh}
+#hus .duo .imgw{aspect-ratio:3/4}
+#hus .duo figure.off{margin-top:11vh}
+@media(max-width:760px){#hus .duo{grid-template-columns:1fr}#hus .duo figure.off{margin-top:0}}
+
+/* ---------- seasonal: the fan (vendored from 21st.dev card-fan-carousel) ----------
+   The year's five as a hand of cards, nothing like the range grid: fanned arc,
+   elastic entrance, hover lifts one and pushes the rest aside. */
+#arstid{padding:15vh 0;overflow:clip}
+#arstid h2{font-size:clamp(2.2rem,5vw,4rem);max-width:14ch}
+.lead{margin-top:16px;color:#C4B8A6;max-width:52ch}
+#arstid .fan{position:relative;height:clamp(360px,52vh,500px);margin-top:34px;
+  display:flex;justify-content:center;align-items:center}
+#arstid .fcard{position:absolute;width:clamp(190px,17.5vw,250px);
+  background:#10141B;border:1px solid rgba(237,242,244,.1);border-radius:18px;
+  padding:24px 16px 18px;text-align:center;will-change:transform;
+  box-shadow:0 24px 60px rgba(0,0,0,.55);transform-origin:50% 100%}
+#arstid .fcard img{height:clamp(170px,24vh,230px);object-fit:contain;margin:0 auto 16px;pointer-events:none}
+#arstid .fcard .n{font-family:var(--disp);font-weight:600;font-size:1.25rem;
+  text-transform:uppercase;letter-spacing:.03em}
+#arstid .fcard .a{font-size:13px;color:var(--al);margin-top:2px}
+@media (prefers-reduced-motion: reduce){
+  #arstid .fan{height:auto;flex-wrap:wrap;gap:12px}
+  #arstid .fcard{position:static;transform:none !important}
+}
+/* a fanned hand needs width it does not have on a phone: stack it instead */
+@media (max-width:820px){
+  #arstid .fan{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #arstid .fcard{position:static;width:auto;transform:none !important;opacity:1 !important;
+    box-shadow:none;border-radius:14px;padding:16px 10px 12px}
+  #arstid .fcard img{height:clamp(120px,18vh,160px)}
+}
+
+/* ---------- water ---------- */
+#vatn{padding:14vh 0;background:#100E09}
+#vatn .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:center}
+#vatn h2{font-size:clamp(2.2rem,5vw,4rem);max-width:13ch}
+#vatn p{margin-top:18px;color:#C4B8A6;max-width:46ch}
+#vatn ul{list-style:none;margin-top:28px;display:grid;gap:0}
+#vatn li{padding:16px 0;border-top:1px solid rgba(237,242,244,.12);display:grid;gap:4px}
+#vatn li b{font-family:var(--disp);font-weight:600;font-size:1.3rem;letter-spacing:.02em;text-transform:uppercase}
+#vatn li span{color:#A79A88;font-size:15px}
+#vatn .note{font-size:15px;color:#A79A88}
+#vatn .vcans{display:flex;gap:clamp(16px,3vw,44px);justify-content:center;align-items:end}
+#vatn .vcans img{height:clamp(300px,52vh,520px);width:100%;object-fit:cover;border-radius:14px;
+  filter:drop-shadow(0 30px 50px rgba(0,0,0,.55))}
+@media(max-width:860px){#vatn .split{grid-template-columns:1fr}}
+
+/* ---------- function hall ---------- */
+#salur{padding:15vh 0}
+#salur h2{font-size:clamp(2.2rem,5.4vw,4.2rem);max-width:14ch}
+#salur .halls{display:grid;grid-template-columns:1.3fr 1fr;gap:10px;margin-top:44px}
+/* grid items default to min-width:auto, so a 1400px-wide photo refuses to shrink
+   and blows the row out past the viewport */
+#salur .halls figure{overflow:clip;border-radius:14px;aspect-ratio:4/3;min-width:0}
+#salur .halls img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+#salur .halls figure:hover img{transform:scale(1.05)}
+@media(max-width:860px){#salur .halls{grid-template-columns:1fr 1fr}
+  #salur .halls figure:last-child{grid-column:1/-1}}
+#salur .split{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,72px);margin-top:52px}
+#salur ul{list-style:none;display:grid}
+#salur li{padding:16px 0;border-bottom:1px solid rgba(237,242,244,.12);display:flex;
+  justify-content:space-between;gap:20px}
+#salur li span:last-child{color:#A79A88;text-align:right;white-space:nowrap}
+#salur .price{font-family:var(--disp);font-size:clamp(2.4rem,5vw,3.8rem);font-weight:600;line-height:1}
+#salur .price small{font-size:.34em;font-weight:500;color:#A79A88;letter-spacing:.06em}
+#salur .book{margin-top:26px;display:inline-block;background:var(--lakk);color:var(--myrkur);
+  text-decoration:none;border-radius:999px;padding:15px 30px;font-weight:700;transition:transform .16s var(--ease)}
+#salur .book:active{transform:scale(.97)}
+#salur .note{margin-top:18px;font-size:14px;color:#A79A88;max-width:44ch;line-height:1.65}
+@media(max-width:860px){#salur .split{grid-template-columns:1fr}#salur li span:last-child{white-space:normal}}
+
+/* ---------- news: an index, not cards ----------
+   Rows of date + headline; the pointer carries a preview of whatever it is over.
+   Nothing else on the page behaves like this, and it stays a plain readable list
+   without the pointer (touch, keyboard, reduced motion). */
+#frettir{padding:15vh 0;position:relative}
+#frettir h2{font-size:clamp(2rem,4.6vw,3.4rem)}
+#frettir .feed{margin-top:44px;border-top:1px solid rgba(237,242,244,.12)}
+#frettir a.item{display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,44px);
+  align-items:baseline;padding:26px 4px;border-bottom:1px solid rgba(237,242,244,.12);
+  text-decoration:none;color:inherit;transition:color .3s var(--ease),padding-left .4s var(--ease)}
+#frettir a.item:hover,#frettir a.item:focus-visible{color:var(--gull);padding-left:18px}
+#frettir .when{font-size:13px;color:#7C7060;font-variant-numeric:tabular-nums;white-space:nowrap}
+#frettir .what{font-family:var(--disp);font-weight:600;text-transform:uppercase;
+  letter-spacing:.02em;font-size:clamp(1.25rem,2.6vw,2rem);line-height:1.05}
+#frettir .go{font-size:13px;color:#7C7060;white-space:nowrap}
+#frettir a.item:hover .go,#frettir a.item:focus-visible .go{color:var(--gull)}
+/* parked off-screen: cx/cy start at 0, and Chrome fires pointerenter when content
+   scrolls under a stationary cursor, which flashed this panel in the top-left corner */
+#frettir .peek{position:fixed;top:0;left:0;width:210px;height:250px;pointer-events:none;
+  z-index:20;opacity:0;border-radius:14px;overflow:hidden;background:#10141B;
+  transform:translate3d(-9999px,-9999px,0);
+  border:1px solid rgba(237,242,244,.12);will-change:transform,opacity}
+/* a background image, not an <img>: an empty <img> src counts as a broken image */
+#frettir .peek{background-repeat:no-repeat;background-position:center;background-size:cover}
+@media(hover:none),(prefers-reduced-motion:reduce){#frettir .peek{display:none}}
+@media(max-width:640px){#frettir a.item{grid-template-columns:1fr;gap:6px;min-height:56px}
+  #frettir .go{display:none}}
+
+/* ---------- contact ---------- */
+#samband{padding:14vh 0 4vh}
+#samband h2{font-size:clamp(2rem,4.6vw,3.4rem)}
+#samband .people{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:10px;margin-top:44px}
+#samband .card{background:#151009;border:1px solid rgba(237,242,244,.08);border-radius:14px;
+  padding:26px 24px;display:grid;gap:6px;align-content:start}
+#samband .who{font-family:var(--disp);font-weight:600;font-size:1.5rem;text-transform:uppercase;letter-spacing:.02em}
+#samband .role{color:var(--gull);font-size:14px;font-weight:600;margin-bottom:8px}
+#samband a{display:flex;align-items:center;min-height:44px;color:#C9D4DC;
+  text-decoration:none;font-size:15px;width:max-content}
+#samband a:hover,#samband a:focus-visible{color:var(--lakk);text-decoration:underline}
+
+/* ---------- full range ---------- */
+#urval{padding:16vh 0;background:#120E09}
+#urval h2{font-size:clamp(2.2rem,5vw,4rem);max-width:16ch}
+/* ---------- the banner, plain and full width ----------
+   Their commissioned drawing carries itself: full bleed, faded into the room at its
+   top and bottom edges, drifting slightly as it passes. The story sits under it. */
+#profil .eydi{margin-top:clamp(48px,9vh,110px)}
+#profil .banner{overflow:hidden}
+#profil .banner img{display:block;width:118%;max-width:none;height:auto;will-change:transform;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent);
+  mask-image:linear-gradient(180deg,transparent,#000 14%,#000 86%,transparent)}
+#profil .saga{margin-top:34px;max-width:58ch;color:#A79A88;font-size:15.5px;line-height:1.75}
+#profil .saga .s2{margin-top:12px;color:var(--gull);font-weight:600}
+/* the year-round eight in one calm band; the seasonal five live in the fan above */
+#urval .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-top:44px}
+#urval .cell{background:#10141B;border:1px solid rgba(237,242,244,.06);border-radius:12px;
+  padding:16px 10px 13px;text-align:center;transition:transform .35s var(--ease),border-color .35s}
+#urval .cell:hover{transform:translateY(-5px);border-color:rgba(237,242,244,.22)}
+#urval .cell img{height:118px;object-fit:contain;margin:0 auto 10px}
+#urval .cell .n{font-weight:700;font-size:13px;line-height:1.25}
+#urval .cell .a{font-size:12px;color:var(--al);margin-top:2px}
+
+/* ---------- sermerking ---------- */
+#merki{padding:16vh 0 10vh;min-height:100dvh;display:grid;align-content:center}
+#merki h2{font-size:clamp(2.4rem,6vw,4.6rem);max-width:14ch}
+#merki .clients{margin-top:40px}
+#merki .clab{font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:#7C7060;font-weight:600}
+#merki .crow{display:flex;gap:clamp(14px,2.6vw,40px);align-items:end;margin-top:20px;flex-wrap:wrap}
+#merki .crow img{height:clamp(120px,15vh,168px);width:auto;object-fit:contain;
+  filter:drop-shadow(0 18px 30px rgba(0,0,0,.5));transition:transform .4s var(--ease)}
+#merki .crow img:hover{transform:translateY(-8px)}
+#merki .play{display:grid;grid-template-columns:minmax(300px,1fr) minmax(280px,460px);
+  gap:clamp(28px,5vw,70px);align-items:center;margin-top:24px}
+#merki .canhold{position:relative;height:min(64vh,600px)}
+#merki .canhold canvas{width:100%;height:100%}
+#merki form{display:grid;gap:14px}
+#merki label{font-weight:700;font-size:14px}
+#merki input{border:1px solid rgba(237,242,244,.22);background:#151009;border-radius:12px;
+  padding:16px 18px;font:500 17px var(--body);color:var(--lakk);width:100%}
+#merki input::placeholder{color:#7C7060}
+#merki input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+#merki .hint{font-size:14px;color:#A79A88;max-width:44ch}
+#merki .pick{border:0;padding:0;margin:0}
+#merki .pick legend{font-weight:700;font-size:14px;padding:0;margin-bottom:10px}
+#merki .swatches{display:flex;gap:9px;flex-wrap:wrap}
+/* the dot stays 34px; the touch area is 44px, which is the real requirement */
+#merki .swatches button{width:44px;height:44px;border-radius:50%;border:5px solid transparent;
+  padding:0;cursor:pointer;transition:transform .2s var(--ease),border-color .2s;
+  background-clip:content-box;outline-offset:2px}
+#merki .swatches button:hover{transform:scale(1.12)}
+#merki .swatches button[aria-pressed="true"]{border-color:var(--lakk);border-width:3px;transform:scale(1.1)}
+#merki .segs{display:flex;gap:8px}
+#merki .segs button{border:1px solid rgba(237,242,244,.22);background:transparent;color:#C9D4DC;
+  border-radius:999px;padding:9px 18px;font-weight:600;font-size:14px;cursor:pointer;
+  transition:background .25s,color .25s,border-color .25s}
+#merki .segs button.on{background:var(--lakk);color:var(--myrkur);border-color:var(--lakk)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#merki .mail{margin-top:10px;display:inline-block;width:max-content;background:var(--lakk);color:var(--myrkur);
+  text-decoration:none;border-radius:999px;padding:15px 28px;font-weight:700;transition:transform .16s var(--ease)}
+#merki .mail:active{transform:scale(.97)}
+@media(max-width:860px){#merki .play{grid-template-columns:1fr}#merki .canhold{order:-1;height:52vh}}
+
+/* ---------- tour ---------- */
+#tur{padding:16vh 0;background:#120E09}
+#tur h2{font-size:clamp(2.4rem,6vw,4.6rem);max-width:16ch}
+#tur .split{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,80px);margin-top:56px}
+#tur .brew .imgw{aspect-ratio:3/2;margin-bottom:30px}
+#tur .bottles{display:flex;gap:clamp(14px,2.5vw,34px);align-items:flex-end;margin-top:34px}
+#tur .bottles img{height:clamp(110px,14vh,158px);width:auto;object-fit:contain;
+  filter:drop-shadow(0 16px 26px rgba(0,0,0,.5))}
+#tur .bottles img:last-child{height:clamp(90px,11vh,124px);border-radius:10px}
+#tur ul{list-style:none;display:grid}
+#tur li{padding:18px 0;border-bottom:1px solid rgba(237,242,244,.12);display:flex;justify-content:space-between;gap:20px}
+#tur li span:last-child{color:#A79A88;text-align:right}
+#tur .price{font-family:var(--disp);font-size:clamp(2.8rem,6vw,4.6rem);font-weight:600;line-height:1}
+#tur .price small{font-size:.35em;font-weight:500;color:#A79A88;letter-spacing:.06em}
+#tur .book{margin-top:30px;display:inline-block;background:var(--gull);color:var(--myrkur);text-decoration:none;
+  border-radius:999px;padding:16px 32px;font-weight:700;transition:transform .16s var(--ease)}
+#tur .book:active{transform:scale(.97)}
+#tur .note{margin-top:14px;font-size:14px;color:#A79A88}
+@media(max-width:860px){#tur .split{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+footer{padding:96px 0 40px;background:#0A0805;border-top:1px solid rgba(237,242,244,.07);font-size:14px}
+footer .ftop{display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:clamp(32px,6vw,110px);align-items:start}
+footer .fbrand img{height:110px;width:auto}
+footer .fbrand p{margin-top:20px;color:#A79A88;max-width:34ch;line-height:1.7}
+footer .fcols{display:grid;grid-template-columns:repeat(3,auto);gap:clamp(28px,4.5vw,84px)}
+footer .fcols h3{font-family:var(--disp);font-weight:600;font-size:1.05rem;letter-spacing:.08em;
+  color:var(--gull);margin-bottom:14px}
+footer .fcols a{display:flex;align-items:center;min-height:44px;min-width:44px;color:#C9D4DC;
+  text-decoration:none;width:max-content}
+footer .fcols a:hover,footer .fcols a:focus-visible{color:var(--lakk);text-decoration:underline}
+footer .fline{height:1px;background:rgba(237,242,244,.09);margin:56px 0 26px}
+footer .fbase{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#7C7060;font-size:13px}
+@media(max-width:860px){footer .ftop{grid-template-columns:1fr}footer .fcols{grid-template-columns:1fr 1fr}}
+
+.rv{opacity:0;transform:translateY(26px)}
+.mask-h .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+.mask-h .w>span{display:inline-block;transform:translateY(114%)}
+#rok .lede .wd{opacity:.14}
+#rok .lede .wd.gold{color:var(--gull)}
+@media (prefers-reduced-motion: reduce){
+  .rv,#rok .lede .wd{opacity:1 !important;transform:none !important}
+  #stage{display:none !important}
+  #gamme{height:auto}
+  #gamme .hold{position:static;height:auto;padding:18vh 0 6vh}
+  #gamme h1 .w>span{transform:none}
+  #gamme .panels{position:static;min-height:0;display:grid;gap:40px;margin-top:40px}
+  #gamme .bp{position:static;opacity:1 !important;visibility:visible !important}
+  #gamme .side{display:none}
+  #profil{min-height:0;padding:10vh 0}
+  #hus .full{height:auto}
+  #hus .full .imgw{position:relative;aspect-ratio:16/9}
+  *{transition:none !important}
+}
+/* same static path for browsers without WebGL (class set by JS) */
+:root.no3d .rv,:root.no3d #rok .lede .wd{opacity:1 !important;transform:none !important}
+:root.no3d #stage{display:none !important}
+:root.no3d #gamme{height:auto}
+:root.no3d #gamme .hold{position:static;height:auto;padding:18vh 0 6vh}
+:root.no3d #gamme h1 .w>span{transform:none}
+:root.no3d #gamme .panels{position:static;min-height:0;display:grid;gap:40px;margin-top:40px}
+:root.no3d #gamme .bp{position:static;opacity:1 !important;visibility:visible !important}
+:root.no3d #gamme .side{display:none}
+:root.no3d #profil{min-height:0;padding:10vh 0}
+:root.no3d #hus .full{height:auto}
+:root.no3d #hus .full .imgw{position:relative;aspect-ratio:16/9}
+:root.no3d #arstid .fan{height:auto;flex-wrap:wrap;gap:12px}
+:root.no3d #arstid .fcard{position:static;transform:none !important;opacity:1 !important}
+</style>
+</head>
+<body>
+
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gq">
+  <div>
+    <div class="crest"><img src="img/kaldi/logokaldi.png" alt="Bruggsmiðjan Kaldi"></div>
+    <p id="gq">Ertu 20 ára eða eldri? Vefurinn kynnir áfengi og er ætlaður fullorðnum.</p>
+    <div class="row">
+      <button id="gyes">Já, ég er 20 ára eða eldri</button>
+      <button id="gno" class="no">Nei, ekki enn</button>
+    </div>
+    <div class="under" id="gunder">Bruggað á Árskógssandi síðan 2006</div>
+  </div>
+</div>
+
+<a class="skip" href="#gamme">Beint í efni</a>
+<div class="navscrim" aria-hidden="true"></div>
+<nav aria-label="Aðalvalmynd">
+  <a class="mark" href="#gamme" aria-label="Bruggsmiðjan Kaldi, efst á síðu">
+    <img src="img/kaldi/logokaldi.png" alt=""></a>
+  <div class="links">
+    <a href="#gamme">Bjórinn</a>
+    <a href="#vatn">Vatnið</a>
+    <a href="#hus">Bruggsmiðjan</a>
+    <a href="#merki">Sérmerking</a>
+    <a href="#salur">Bjórböðin</a>
+    <a href="#frettir">Frá býli</a>
+    <a class="cta" href="#tur">Bóka kynningu</a>
+  </div>
+</nav>
+
+<div id="stage" aria-hidden="true"></div>
+
+<main>
+<!-- gamme: scroll flips through the range, ciao's carousel -->
+<section id="gamme" aria-label="Bjórarnir, flettu með því að skrolla">
+  <div class="hold">
+    <div class="wrapc">
+      <h1 aria-label="Kaldi">
+        <span class="w" aria-hidden="true"><span><i>K</i><i>A</i><i>L</i><i>D</i><i>I</i></span></span>
+      </h1>
+    </div>
+    <div class="wrapc strip">
+      <div class="panels" id="panels"></div>
+      <div class="side">
+        <div class="hint">Skrunaðu</div>
+        <div class="rail" id="rail"></div>
+        <div class="count"><b id="fidx">01</b> / <span id="ftot">08</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- profile: the label's world -->
+<section id="profil">
+  <div class="wrapc">
+    <div class="copy">
+      <h2>Ein vetrarnótt, allur skalinn</h2>
+      <p class="rv">Á hverjum miða stendur riddarinn, skjaldarmerkið og orðið Kaldi í sama gotneska skriftinni. Hver bjór fær sitt blek, sami riddarinn, sama nóttin í Eyjafirði.</p>
+    </div>
+  </div>
+  <figure class="eydi">
+    <div class="banner">
+      <img src="img/kaldi/snjor.jpg" alt="Kaldi flöskur og dósir standa í snjó í Eyjafirði, fjöll í baksýn">
+    </div>
+    <figcaption class="saga wrapc">
+      <p>Bjórinn er kenndur við kuldann. Hann er bruggaður eftir tékkneskri hefð frá 1842, ógerilsneyddur, án rotvarnarefna og án viðbætts sykurs, við fjörð þar sem fjöllin standa hvít stóran hluta ársins.</p>
+      <p class="s2">Hver bjór ber sitt blek í þessari einu nótt.</p>
+    </figcaption>
+  </figure>
+</section>
+
+<!-- seasonal line -->
+<section id="arstid">
+  <div class="wrapc">
+    <h2>Jólin í Bruggsmiðjunni</h2>
+    <p class="rv lead">Jóla Kaldi hefur oft verið valinn besti jólabjórinn á Íslandi og selst stundum upp áður en síðasti jólasveinninn kemur til byggða. Súkkulaði Porterinn fylgir honum, með Nóa Síríus súkkulaði í suðunni.</p>
+    <div class="fan" id="sfan" aria-label="Jólabjórarnir"></div>
+  </div>
+</section>
+
+<!-- the water line -->
+<section id="vatn">
+  <div class="wrapc split">
+    <div class="copy">
+      <h2>Besta vatn í heimi</h2>
+      <p class="rv">Föðuramma Agnesar var vön að segja að á Árskógssandi ættum við besta vatn í heimi. Bjórinn er bruggaður úr því, vatninu úr lindinni í Sólarfjalli við utanverðan Eyjafjörð.</p>
+      <ul class="rv">
+        <li><b>Lindin</b><span>Sólarfjall, við utanverðan Eyjafjörð</span></li>
+        <li><b>Hráefnin</b><span>Vatn, maltað bygg, humlar og ger, eftir þýsku gæðalögunum</span></li>
+        <li><b>Byggið</b><span>Frá Tékklandi, heimalandi pilsnersins</span></li>
+      </ul>
+      <p class="rv note">Ógerilsneyddur, án rotvarnarefna og án viðbætts sykurs.</p>
+    </div>
+    <figure class="rv vcans">
+      <img loading="lazy" src="img/kaldi/Photo_29.6.2021_11_14_17.jpg" alt="Bruggtankar í Bruggsmiðjunni Kalda á Árskógssandi">
+    </figure>
+  </div>
+</section>
+
+<!-- argument: the founders -->
+<section id="rok">
+  <div class="wrapc">
+    <p class="lede">Eftir 26 ár á sjó slasaðist Ólafur á hné. Agnes sá frétt um lítil brugghús í útlöndum og viku síðar voru þau hjónin komin til Danmerkur að læra að brugga.</p>
+    <p class="sub rv">Fyrsta bruggun fór fram 22. ágúst 2006 og fyrsta átöppun 28. september sama ár, með tékkneska bruggmeistaranum David Masa. Í dag er Kaldi Ljós einn söluhæsti flöskubjór landsins.</p>
+  </div>
+</section>
+
+<!-- news: their own fréttir, as a hover-reveal index -->
+<section id="frettir">
+  <div class="wrapc">
+    <h2>Beint frá býli</h2>
+    <div class="feed" id="feed"></div>
+    <div class="peek" id="peek" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- brewery: the photographic second act -->
+<section id="hus">
+  <div class="full">
+    <div class="imgw"><img src="img/kaldi/Photo_29.6.2021_11_16_24.jpg" alt="Bruggsmiðjan Kaldi á Árskógssandi, flöskurnar málaðar á húsvegginn"></div>
+    <div class="ftext wrapc">
+      <h2>380 fermetrar við fjörðinn</h2>
+      <p class="rv">Bruggsmiðjan stendur á Árskógssandi, 12 km frá Dalvík og 35 km frá Akureyri, í þorpi þar sem allt snerist um fiskinn þar til hjónin Agnes og Ólafur fóru að brugga. Þetta er fyrsta handverksbrugghús á Íslandi.</p>
+    </div>
+  </div>
+  <div class="wrapc duo">
+    <figure><div class="imgw"><img loading="lazy" src="img/kaldi/106477068_3294204733978114_5013542856799910995_n.jpg" alt="Kaldi hellt í glas við hlið dósar, froðan rís"></div>
+      <figcaption>Ógerilsneyddur, eins og hann kemur úr tanknum</figcaption></figure>
+    <figure class="off"><div class="imgw"><img loading="lazy" src="img/kaldi/JMK_3374.jpg" alt="Kaldi Lite dós stendur á ísi"></div>
+      <figcaption>Kenndur við kuldann</figcaption></figure>
+  </div>
+</section>
+
+<!-- full range -->
+<section id="urval">
+  <div class="wrapc">
+    <h2>Allur skalinn</h2>
+    <div class="grid" id="ugrid"></div>
+  </div>
+</section>
+
+<!-- sermerking toy -->
+<section id="merki">
+  <div class="wrapc">
+    <h2>Þitt merki. Okkar bjór.</h2>
+    <p class="rv lead">Viltu sérmerktan Kalda fyrir brúðkaupið, veisluna eða fyrirtækið? Bruggsmiðjan græjar það í bæði flöskur og dósir.</p>
+    <div class="play">
+      <form onsubmit="return false">
+        <label for="evt">Tilefnið</label>
+        <input id="evt" name="evt" autocomplete="off" maxlength="22" placeholder="Brúðkaup Önnu og Bjarka">
+
+        <label for="evt2">Undirlína</label>
+        <input id="evt2" name="evt2" autocomplete="off" maxlength="26" placeholder="14. júní 2026">
+
+        <fieldset class="pick">
+          <legend>Umbúðirnar</legend>
+          <div class="segs" id="vesselpick">
+            <button type="button" data-v="can" class="on">Dós</button>
+            <button type="button" data-v="bottle">Flaska</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="pick">
+          <legend>Blekið</legend>
+          <div class="swatches" id="inkpick"></div>
+        </fieldset>
+
+        <fieldset class="pick">
+          <legend>Letur</legend>
+          <div class="segs" id="fontpick">
+            <button type="button" data-f="disp" class="on">Þykkt</button>
+            <button type="button" data-f="body">Fínlegt</button>
+          </div>
+        </fieldset>
+
+        <p class="hint rv">Fyrirtæki, brúðkaup, afmæli og partý geta fengið sérmerktan Kalda með eigin hönnun, í flöskum eða dósum.</p>
+        <a class="mail" id="merkimail" href="mailto:joi@bruggsmidjan.is?subject=S%C3%A9rmerktur%20Kaldi">Fá tilboð í sérmerkingu</a>
+      </form>
+      <div class="canhold" id="merkihold"></div>
+    </div>
+  </div>
+</section>
+
+<!-- last copy: the tour -->
+<section id="tur">
+  <div class="wrapc">
+    <h2>Kynning í Bruggsmiðjunni</h2>
+    <div class="split">
+      <div class="rv brew">
+        <ul>
+          <li><span>60 mínútna kynning fyrir hópinn þinn</span><span>saga og handverk</span></li>
+          <li><span>Sagan frá 2006, sjómaðurinn sem fór að brugga</span><span>innifalið</span></li>
+          <li><span>Skoðunarferð um verksmiðjuna</span><span>innifalið</span></li>
+          <li><span>Smakk á bjórunum beint af dælu</span><span>innifalið</span></li>
+          <li><span>Stærri hópar</span><span>tilboð eftir stærð</span></li>
+        </ul>
+        <div class="bottles">
+          <img loading="lazy" src="img/kaldi/products/ljos.png" alt="Kaldi Ljós í 330 ml flösku">
+          <img loading="lazy" src="img/kaldi/products/dokkur.png" alt="Kaldi Dökkur í 330 ml flösku">
+          <img loading="lazy" src="img/kaldi/products/tripel.png" alt="Kaldi Tripel í 330 ml flösku">
+        </div>
+      </div>
+      <div class="rv">
+        <div class="price">3.500 kr<small> á mann</small></div>
+        <a class="book" href="mailto:bruggsmidjan@bruggsmidjan.is?subject=B%C3%B3kun%20%C3%AD%20kynningu">Bóka kynningu</a>
+        <div class="note">Bókanir á bruggsmidjan@bruggsmidjan.is eða í síma 466 2505. Fyrir stærri hópa er gefið tilboð.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- the beer spa -->
+<section id="salur">
+  <div class="wrapc">
+    <h2>Bjórböðin og Hótel Kaldi</h2>
+    <div class="halls rv">
+      <figure><img loading="lazy" src="img/kaldi/bjorbodin1.jpg" alt="Bjórböðin á Árskógssandi, pottar úti með útsýni yfir Eyjafjörð"></figure>
+      <figure><img loading="lazy" src="img/kaldi/bjorbodin2.jpg" alt="Pottur í Bjórböðunum við sólsetur yfir firðinum"></figure>
+    </div>
+    <div class="split">
+      <div class="rv">
+        <ul>
+          <li><span>Bjórböð Kalda, böðun í ungum bjór</span><span>bjorbodin.is</span></li>
+          <li><span>Ekkert ljósmengun, norðurljósin sjást beint úr pottunum</span><span>á veturna</span></li>
+          <li><span>Veitingastaður og bar á staðnum</span><span>opið gestum</span></li>
+          <li><span>Hótel Kaldi, gisting í þorpinu</span><span>við hlið brugghússins</span></li>
+          <li><span>Bjórkútar með frírri dælu fyrir viðburði</span><span>brúðkaup og afmæli</span></li>
+        </ul>
+      </div>
+      <div class="rv">
+        <div class="price">Bjórböðin<small> bókun á netinu</small></div>
+        <a class="book" href="https://www.bjorbodin.is/" target="_blank" rel="noopener">Bóka bjórbað</a>
+        <div class="note">Bjórböðin og Hótel Kaldi eru rekin samhliða Bruggsmiðjunni á Árskógssandi. Kútar og dæluleiga bókast hjá Bruggsmiðjunni.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- contact -->
+<section id="samband">
+  <div class="wrapc">
+    <h2>Hafa samband</h2>
+    <div class="people">
+      <div class="rv card">
+        <div class="who">Bruggsmiðjan Kaldi</div>
+        <div class="role">Öldugata 22, 621 Árskógssandur</div>
+        <a href="mailto:bruggsmidjan@bruggsmidjan.is">bruggsmidjan@bruggsmidjan.is</a>
+        <a href="tel:+3544662505">+354 466 2505</a>
+      </div>
+      <div class="rv card">
+        <div class="who">Agnes Anna Sigurðardóttir</div>
+        <div class="role">Framkvæmdastjóri</div>
+        <a href="mailto:agnes@bruggsmidjan.is">agnes@bruggsmidjan.is</a>
+      </div>
+      <div class="rv card">
+        <div class="who">Sigurður Bragi Ólafsson</div>
+        <div class="role">Bruggmeistari og stjórnarformaður</div>
+        <a href="mailto:siggi@bruggsmidjan.is">siggi@bruggsmidjan.is</a>
+      </div>
+      <div class="rv card">
+        <div class="who">Jóhann Már Kristinsson</div>
+        <div class="role">Sölu- og markaðsstjóri, sérmerkingar</div>
+        <a href="mailto:joi@bruggsmidjan.is">joi@bruggsmidjan.is</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrapc">
+    <div class="ftop">
+      <div class="fbrand">
+        <img src="img/kaldi/logokaldi.png" alt="Bruggsmiðjan Kaldi">
+        <p>Fyrsta handverksbrugghús á Íslandi, stofnað 2006 af hjónunum Agnesi og Ólafi á Árskógssandi í Eyjafirði.</p>
+      </div>
+      <div class="fcols" role="navigation" aria-label="Neðanvalmynd">
+        <div>
+          <h3>Bjórinn</h3>
+          <a href="#gamme">Allur skalinn</a>
+          <a href="#arstid">Jólabjórarnir</a>
+          <a href="#vatn">Vatnið</a>
+          <a href="#merki">Sérmerking</a>
+        </div>
+        <div>
+          <h3>Heimsóknir</h3>
+          <a href="#hus">Bruggsmiðjan</a>
+          <a href="#tur">Kynningar</a>
+          <a href="#salur">Bjórböðin</a>
+          <a href="#frettir">Frá býli</a>
+          <a href="https://www.bjorbodin.is/" rel="noopener">bjorbodin.is</a>
+        </div>
+        <div>
+          <h3>Samband</h3>
+          <a href="mailto:bruggsmidjan@bruggsmidjan.is">bruggsmidjan@bruggsmidjan.is</a>
+          <a href="tel:+3544662505">+354 466 2505</a>
+          <a href="https://www.bruggsmidjan.is/" rel="noopener">bruggsmidjan.is</a>
+        </div>
+      </div>
+    </div>
+    <div class="fline" aria-hidden="true"></div>
+    <div class="fbase">
+      <span>BRUGGSMIÐJAN KALDI · Öldugata 22, 621 Árskógssandur · Kennitala 521205-1520</span>
+      <span class="fage">Áfengi er ætlað 20 ára og eldri. Njótið með ábyrgð.</span>
+    </div>
+  </div>
+</footer>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"}}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { BARREL, TOP, BASE, SEAM } from './proto/can-profile.js';
+import { GLASS, BOTTLE_BASE, CAP, BOTTLE_H, LABEL_LO, LABEL_HI, NECK_LO, NECK_HI }
+  from './proto/bottle-profile.js';
+
+/* All facts, ABVs and descriptions from bruggsmidjan.is/bjorarnir, read 2026-08-11.
+   IPA's 6,0% is read off the label itself; Neipa's ABV is not published anywhere we
+   could verify, so its panel carries the style instead of an invented number.
+   vessel decides the 3D geometry: their classics ship in brown glass longnecks,
+   the newer line in 330ml cans — both are real, both stand in the journey. */
+const BEERS = [
+  {name:'Kaldi Ljós', vessel:'bottle', asset:'1', slug:'ljos', abv:'5%', ink:'#C8502E',
+   desc:'Fyrsti bjórinn, og enn einn söluhæsti flöskubjór landsins. Lager eftir Pilsner hefðinni, Saaz og Sladek humlar, fjórar vikur í gerjun.'},
+  {name:'Kaldi Dökkur', vessel:'bottle', asset:'2', slug:'dokkur', abv:'5%', ink:'#C98A2E',
+   desc:'Annar bjórinn á markað. Dökkur Pilsner, rafbrúnn með ristuðu malti og karamellukeim, og á sér tryggasta kúnnahóp línunnar.'},
+  {name:'Norðan Kaldi', vessel:'can', asset:'9', slug:'nordan', abv:'5,4%', ink:'#3D7F78',
+   desc:'Fyrsta ölið frá Kalda, amber öl að breskri fyrirmynd. Nýsjálenskir Wakatu humlar, keimur af blómum og þurrkuðum ávöxtum.'},
+  {name:'Kaldi IPA', vessel:'bottle', asset:'4', slug:'ipa', abv:'6,0%', ink:'#3FA0BE',
+   desc:'Indian Pale Ale af bandarískri fyrirmynd. Simcoe, Citra og Mosaic humlar, öflug beiskja og suðrænir ávextir í nefið.'},
+  {name:'Kaldi Tripel', vessel:'bottle', asset:'5', slug:'tripel', abv:'9,3%', ink:'#D9A63C',
+   desc:'Belgískt öl með Abbey geri á háum hita. Kandís lyftir vínandanum upp í 9,3% og skilur eftir dökka karamellu og krydd.'},
+  {name:'Kaldi Neipa', vessel:'can', asset:'neipa', slug:'neipa', abv:'NEIPA', ink:'#D65B8E',
+   desc:'Létt og sumarlegt ljóst öl. Amarillo og Nelson Sauvin humlar fara aldrei í suðuna, svo beiskjan hverfur og ávöxturinn situr eftir.'},
+  {name:'Kaldi Lite', vessel:'can', asset:'7', slug:'lite', abv:'4,4%', ink:'#6FA9C4',
+   desc:'Ljósgullinn, ósætur og léttur, með hverfandi beiskju. Kolvetnaskertur og því færri hitaeiningar en í hefðbundnum bjór.'},
+  {name:'Áfengislaus Kaldi', vessel:'can', asset:'6', slug:'nullprosent', abv:'0,0%', ink:'#3E5FA3',
+   desc:'Fyrsta áfengislausa varan frá Kalda, á markað í júní 2023. Bragðmikill og góður óáfengur kostur, sami riddarinn.'},
+];
+/* the two Christmas beers hold the seasonal fan */
+const SEASON = [
+  {name:'Jóla Kaldi', slug:'jola', abv:'5,4%'},
+  {name:'Jóla Súkkulaði Porter', slug:'porter', abv:'Porter'},
+];
+const ALL = [...BEERS, ...SEASON];
+
+/* Beint frá býli: the four real ways to get Kaldi from the source, all from their
+   own forsíða (2026-08-11). An index that points down the page, with photo peeks. */
+const NEWS = [
+  {t:'Smásala í verksmiðjunni, 18% ódýrari en í ÁTVR', d:'Frá 1. júlí 2022', u:'#samband', img:'img/kaldi/Photo_29.6.2021_11_16_24.jpg'},
+  {t:'Bjórkútar með frírri dælu', d:'Viðburðir og veislur', u:'#salur', img:'img/kaldi/106477068_3294204733978114_5013542856799910995_n.jpg'},
+  {t:'Sérmerktur Kaldi í flöskur og dósir', d:'Brúðkaup og fyrirtæki', u:'#merki', img:'img/kaldi/snjor.jpg'},
+  {t:'Kynningar með smakki beint af dælu', d:'60 mínútur, hópar', u:'#tur', img:'img/kaldi/Photo_29.6.2021_11_14_17.jpg'},
+];
+
+/* no WebGL (old device, exhausted contexts, headless bot) must never mean a broken
+   page: those visitors get the same fully readable static path as reduced-motion */
+const hasGL = (() => { try { const c = document.createElement('canvas');
+  return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch(e){ return false; } })();
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || !hasGL;
+if (!hasGL) document.documentElement.classList.add('no3d');
+
+/* age gate */
+const gate = document.getElementById('gate');
+const gateShown = sessionStorage.getItem('kld-gate') !== 'ok';
+if (!gateShown) gate.classList.add('hide');
+let cinematicEnter = null;   /* assigned by the 3D block; the reveal lives there */
+document.getElementById('gyes').onclick = () => {
+  sessionStorage.setItem('kld-gate','ok');
+  if (reduce) { gate.classList.add('hide'); return; }
+  if (cinematicEnter) { cinematicEnter(); return; }
+  gsap.to(gate, {opacity:0, duration:.5, ease:'power2.out', onComplete:()=>gate.classList.add('hide')});
+};
+document.getElementById('gno').onclick = () => {
+  document.getElementById('gunder').textContent = 'Við bíðum eftir þér. Kíktu við þegar þú hefur aldur til.';
+};
+
+/* grids: their real product photography, bottles and cans alike */
+const pimg = b => b.slug === 'neipa' ? 'img/kaldi/products/neipa.jpg' : `img/kaldi/products/${b.slug}.png`;
+const cell = b => `<div class="cell"><img loading="lazy" src="${pimg(b)}"
+   alt="${b.name} í 330 ml ${b.vessel === 'can' ? 'dós' : 'flösku'}"><div class="n">${b.name}</div><div class="a">${b.abv}</div></div>`;
+document.getElementById('ugrid').innerHTML = [...BEERS, ...SEASON.map(s => ({...s, vessel:'bottle'}))].map(cell).join('');
+
+/* news index + pointer preview (built outside the 3D branch so it works everywhere) */
+document.getElementById('feed').innerHTML = NEWS.map(n =>
+  `<a class="item" href="${n.u}" rel="noopener" data-img="${n.img}">
+     <span class="when">${n.d}</span><span class="what">${n.t}</span><span class="go">Sjá nánar</span>
+   </a>`).join('');
+{
+  const peek = document.getElementById('peek');
+  let px = 0, py = 0, cx = 0, cy = 0, on = false, raf = 0;
+  const loop = () => {
+    cx += (px - cx) * .16; cy += (py - cy) * .16;
+    peek.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+    raf = on || Math.abs(px - cx) > .5 ? requestAnimationFrame(loop) : 0;
+  };
+  document.querySelectorAll('#frettir a.item').forEach(a => {
+    a.addEventListener('pointerenter', e => {
+      /* a real hover always carries coordinates; a scroll-induced enter at the origin
+         does not, and must not drag the panel into the corner */
+      if (e.pointerType !== 'mouse' || (e.clientX <= 0 && e.clientY <= 0)) return;
+      peek.style.backgroundImage = `url("${a.dataset.img}")`;
+      px = e.clientX + 24; py = e.clientY - 125;
+      if (!raf) { cx = px; cy = py; }              /* place BEFORE showing */
+      peek.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+      on = true; peek.style.opacity = '1';
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    a.addEventListener('pointermove', e => { px = e.clientX + 24; py = e.clientY - 125; });
+    a.addEventListener('pointerleave', () => { on = false; peek.style.opacity = '0'; });
+  });
+}
+document.getElementById('sfan').innerHTML = SEASON.map(b =>
+  `<div class="fcard"><img loading="lazy" src="img/kaldi/products/${b.slug}.png" alt="${b.name} í 330 ml flösku">
+   <div class="n">${b.name}</div><div class="a">${b.abv}</div></div>`).join('');
+
+if (reduce) {
+  /* no WebGL, no scroll journey: render the range as a plain readable list */
+  document.getElementById('panels').innerHTML = BEERS.map(b => `
+    <article class="bp static"><h2>${b.name}</h2>
+      <div class="row"><span class="abv">${b.abv}</span><p>${b.desc}</p></div></article>`).join('');
+} else {
+
+gsap.registerPlugin(ScrollTrigger);
+const lenis = new Lenis({lerp:.1});
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t*1000));
+gsap.ticker.lagSmoothing(0);
+
+/* ---------- ciao pattern: ONE data object, triggers write, rAF applies ---------- */
+const data = {
+  focus:0, focusTarget:0, spread:1,       // carousel state
+  x:0, y:0, scale:1, opacity:1,
+  /* rise and exit are SEPARATE channels, each owned by exactly one animation.
+     They used to share `opacity`/`y` with the entrance, and because the exit is a
+     SCRUBBED tween it captured whatever the value happened to be when it was built
+     (0) and wrote that back on every ScrollTrigger.refresh — so a visitor who had
+     already passed the age gate got a permanently invisible stage. One property,
+     one owner, no implicit `from` anywhere. */
+  rise:1,                                  // 0 = below the floor, 1 = in place
+  exit:0,                                  // 0 = on stage, 1 = sunk and gone
+  bg:new THREE.Color('#0A0E14'),
+};
+/* Mixed vessels: bottles are half the diameter of the old cans, so the row breathes
+   at .62 what it breathed at .92. Judged on render: .55 crowded the tall bottles. */
+const SPACING = .62;
+/* TRUE SCALE, one factor for every vessel: their own snow photography mixes bottles
+   and cans at real proportions, so the stage does too. 231.6mm bottle -> 1.336 units,
+   115mm can -> .664 units. */
+const TRUE_SCALE = .577;
+
+/* ---------- opaque stage: solid scene background, alpha OFF.
+   This is the aluminium fix: the can now composites against a real color
+   inside the canvas, so bright metal can never blend into the page. ---------- */
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:false});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+/* MEASURED: the wrap textures' white lacquer sits at mean 243/255 with 85% of pixels
+   above 240 — they were flattened for a white-background audit, so there is almost no
+   headroom under white. The label material multiplies by 0xd8d6d2 to buy it back, and
+   the exposure comes down to leave the ACES shoulder room to model form. */
+renderer.toneMappingExposure = .82;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+/* a lost GL context (tab sleep, GPU reset, too many contexts) must recover, not
+   leave a dead black stage: preventDefault on lost allows the restore event, and
+   three re-uploads everything on the next render */
+renderer.domElement.addEventListener('webglcontextlost', e => e.preventDefault());
+renderer.domElement.addEventListener('webglcontextrestored', () => { composer.render(); });
+
+const scene = new THREE.Scene();
+scene.background = data.bg;
+const camera = new THREE.PerspectiveCamera(20, innerWidth/innerHeight, .1, 100);
+camera.position.set(0, .02, 4.6);
+
+/* ---------- environment, measured off ciaoenergy.com's own source ----------
+   They load a real .hdr through RGBELoader + PMREMGenerator. That high-dynamic-range
+   env (values far above 1.0) is the single biggest reason their cans read as
+   photographed: a bright softbox at value 40 makes a specular streak that a value-1
+   white plane physically cannot. We build the same thing as a float equirect, so we
+   get true HDR specular at zero download. */
+function hdrStudioEnv(r){
+  const W = 512, H = 256, d = new Float32Array(W*H*4);
+  for (let y = 0; y < H; y++){
+    const v = y/(H-1);
+    const amb = v < .5 ? .012 + (.5-v)*.02 : .004;     /* black room, almost no ambient */
+    for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=amb; d[i+3]=1; }
+  }
+  const softbox = (cu, cv, hu, hv, val) => {
+    for (let y = 0; y < H; y++){
+      const dv = Math.abs(y/(H-1) - cv)/hv; if (dv > 1) continue;
+      for (let x = 0; x < W; x++){
+        let du = Math.abs(x/(W-1) - cu); if (du > .5) du = 1 - du; du /= hu;
+        if (du > 1) continue;
+        const f = (1 - du*du) * (1 - dv*dv), a = val*f*f;
+        const i = (y*W+x)*4; d[i] += a; d[i+1] += a; d[i+2] += a;
+      }
+    }
+  };
+  /* Deliberately LOPSIDED. A can lit evenly from all round has no dark side, which is
+     exactly what "looks like a light is cast on it" means. One dominant key, a thin
+     opposite glint, and near-black everywhere else gives a real dark limb. */
+  softbox(.14, .30, .075, .34, 34);   /* key softbox, front-left: the long body streak */
+  softbox(.63, .34, .016, .32,  7);   /* narrow hard strip, right: thin edge glint only */
+  softbox(.87, .30, .030, .24,  9);   /* rear kicker: lifts the far limb off black */
+  softbox(.30, .04, .34, .12,  3);    /* overhead */
+  softbox(.50, .95, .50, .10,  .5);   /* floor bounce */
+  const t = new THREE.DataTexture(d, W, H, THREE.RGBAFormat, THREE.FloatType);
+  t.mapping = THREE.EquirectangularReflectionMapping; t.needsUpdate = true;
+  const p = new THREE.PMREMGenerator(r);
+  const env = p.fromEquirectangular(t).texture;
+  p.dispose(); t.dispose();
+  return env;
+}
+scene.environment = hdrStudioEnv(renderer);
+/* glass gets its OWN environment: same room, but the lamps are NARROW strips. A wide
+   softbox mirrored in clearcoat paints a fat white band down a bottle's edge; real
+   bottle photography uses strip lights for exactly this reason. Cans keep the scene
+   env untouched. */
+function hdrGlassEnv(r){
+  const W = 512, H = 256, d = new Float32Array(W*H*4);
+  for (let y = 0; y < H; y++){
+    const v = y/(H-1);
+    const amb = v < .5 ? .010 + (.5-v)*.016 : .004;
+    for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=amb; d[i+3]=1; }
+  }
+  const softbox = (cu, cv, hu, hv, val) => {
+    for (let y = 0; y < H; y++){
+      const dv = Math.abs(y/(H-1) - cv)/hv; if (dv > 1) continue;
+      for (let x = 0; x < W; x++){
+        let du = Math.abs(x/(W-1) - cu); if (du > .5) du = 1 - du; du /= hu;
+        if (du > 1) continue;
+        const f = (1 - du*du) * (1 - dv*dv), a = val*f*f;
+        const i = (y*W+x)*4; d[i] += a; d[i+1] += a; d[i+2] += a;
+      }
+    }
+  };
+  softbox(.14, .30, .020, .40, 30);
+  softbox(.40, .32, .008, .34,  8);
+  softbox(.63, .34, .010, .34,  7);
+  softbox(.87, .30, .020, .26,  8);
+  softbox(.30, .04, .34, .12,  2.5);
+  const t = new THREE.DataTexture(d, W, H, THREE.RGBAFormat, THREE.FloatType);
+  t.mapping = THREE.EquirectangularReflectionMapping; t.needsUpdate = true;
+  const pg = new THREE.PMREMGenerator(r);
+  const env = pg.fromEquirectangular(t).texture;
+  pg.dispose(); t.dispose();
+  return env;
+}
+const glassEnv = hdrGlassEnv(renderer);
+
+/* Their `metallic.png` is not a mask — it is BRUSHED ALUMINIUM MICRO-GRAIN, fine
+   horizontal streaks tiled over the whole can. That grain is what breaks a highlight
+   into anisotropic streaks instead of a smooth plastic gradient. Generated here. */
+const brushed = (() => {
+  const N = 512, c = document.createElement('canvas'); c.width = c.height = N;
+  const x = c.getContext('2d'), img = x.createImageData(N, N);
+  const row = new Float32Array(N);
+  for (let i = 0; i < N; i++) row[i] = Math.random();
+  for (let y = 0; y < N; y++){
+    const r0 = (row[y] + row[(y+1)%N]*.5 + row[(y+N-1)%N]*.5) / 2;
+    for (let xx = 0; xx < N; xx++){
+      const s = Math.sin(xx*.011 + y*.9)*.5 + .5;
+      const v = Math.max(0, Math.min(1, .74 + (r0-.5)*.34 + (s-.5)*.07));
+      const i = (y*N+xx)*4, b = v*255|0;
+      img.data[i] = img.data[i+1] = img.data[i+2] = b; img.data[i+3] = 255;
+    }
+  }
+  x.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 2);
+  return t;
+})();
+
+/* ciao's own material numbers: reflectivity 1, ior 2, sheen, clearcoat, metalnessMap.
+   Their can is bare aluminium so they run metalness .9; the printed cans are lacquered,
+   so ours stays low — the realism comes from the HDR env and the grain, not from
+   pretending printed ink is chrome. */
+const metal = new THREE.MeshPhysicalMaterial({color:0x7c7f85, metalness:.95, roughness:.3,
+  sheen:.3, sheenRoughness:.2, sheenColor:0xffffff, clearcoat:1, clearcoatRoughness:.12,
+  reflectivity:1, ior:2, metalnessMap:brushed, envMapIntensity:1.5});
+const seamM = new THREE.MeshStandardMaterial({color:0x6e7176, metalness:1, roughness:.45,
+  metalnessMap:brushed, envMapIntensity:1.1});
+/* The base reads dark in every real photograph: the whole dome sits in its own
+   occlusion. DoubleSide is belt-and-braces after the profile winding fix. */
+const baseM = new THREE.MeshPhysicalMaterial({color:0x3f4247, metalness:.9, roughness:.55,
+  metalnessMap:brushed, envMapIntensity:.45, side:THREE.DoubleSide});
+/* the LID: without it the rim is a hollow tube and any view from above (the rise, the
+   sink, the finale) looks straight into an empty shell. A recessed brushed disc a few
+   mm below the crest is what an open-top view of a real can shows. */
+const lidM = new THREE.MeshPhysicalMaterial({color:0x8e9197, metalness:.95, roughness:.34,
+  metalnessMap:brushed, envMapIntensity:1.25});
+const tabM = new THREE.MeshPhysicalMaterial({color:0x74777d, metalness:.95, roughness:.4,
+  metalnessMap:brushed, envMapIntensity:1.0});
+
+const loader = new THREE.TextureLoader();
+function wrapTex(slug){
+  /* the blurred floor-reflection copy is built INSIDE the load callback — drawing
+     an Image before it has pixels writes a black canvas, which is exactly how the
+     reflections lost their labels */
+  const t = loader.load(`wraps/${slug}_wrap.jpg`, tex => {
+    const c = document.createElement('canvas'); c.width = 64; c.height = 32;
+    const x = c.getContext('2d');
+    x.filter = 'blur(2.5px)';
+    x.drawImage(tex.image, 0, 0, 64, 32);
+    const bt = new THREE.CanvasTexture(c);
+    bt.colorSpace = THREE.SRGBColorSpace; bt.wrapS = THREE.RepeatWrapping;
+    bt.center.set(.5,.5); bt.offset.x = .5;
+    t.userData.blur = bt;
+    if (t.userData.onBlur) t.userData.onBlur(bt);
+  });
+  t.colorSpace = THREE.SRGBColorSpace; t.wrapS = THREE.RepeatWrapping;
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  t.center.set(.5,.5); t.offset.x = .5;
+  return t;
+}
+
+/* one can PER BEER, ciao's clone-per-flavour architecture */
+const segs = innerWidth < 768 ? 112 : 192;
+const gB = new THREE.LatheGeometry(BARREL, segs), gT = new THREE.LatheGeometry(TOP, segs),
+      gBa = new THREE.LatheGeometry(BASE, segs), gS = new THREE.LatheGeometry(SEAM, segs);
+/* a REAL can end, not a disc: rolled rim lip, steep countersink wall, then the
+   near-flat centre panel with a slight dome, plus the stay-tab and its rivet.
+   Profile ordered centre-out / bottom-up so the lathe normals face UP (the BASE
+   winding lesson). Bright alloy so the panel carries a specular sweep at grazing
+   angles, which is what a can top actually looks like when you look across it. */
+const END_PTS = [[23.4,113.3],[23.1,113.0],[22.8,112.0],[22.5,111.0],[21.9,110.3],
+                 [20.6,110.2],[14,110.5],[6,110.8],[0,110.9]];
+/* rim-to-centre order: the OTHER way winds the surface inward and the whole end goes
+   lightless, the same trap the BASE dome hit */
+const gL = new THREE.LatheGeometry(END_PTS.map(([r,y]) => new THREE.Vector2(r*.01, y*.01)), segs);
+const gTab = new THREE.CylinderGeometry(.052, .052, .006, 40);
+gTab.scale(1, 1, 1.75); gTab.translate(.055, 1.113, 0);
+const gRivet = new THREE.CylinderGeometry(.016, .016, .009, 24);
+gRivet.translate(0, 1.113, 0);
+/* ---------- the bottle: measured Kaldi longneck, amber glass ---------- */
+const glassGradient = () => {
+  const c = document.createElement('canvas'); c.width = 4; c.height = 256;
+  const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 256, 0, 0);
+  /* v runs by lathe point index, monotonic in height; soft ramps only. The step at
+     the fill line is deliberately gradual — the photo's is too. */
+  g.addColorStop(0.00, '#200e06');
+  g.addColorStop(0.45, '#2a1608');
+  g.addColorStop(0.66, '#341c0c');
+  g.addColorStop(0.82, '#3c220e');
+  g.addColorStop(0.95, '#44260f');
+  g.addColorStop(1.00, '#30180a');
+  x.fillStyle = g; x.fillRect(0, 0, 4, 256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+};
+const glassMap = glassGradient();
+/* The photo's glass glows AMBER at grazing angles — light passing THROUGH the bottle,
+   which opaque PBR cannot make. A small fresnel emissive fakes exactly that, scaled by
+   the gradient so the liquid-dark body glows less than the headspace. */
+const glassFresnel = sh => {
+  /* the key/under/rim spots are tuned for lacquered cans; on dark glass their direct
+     diffuse floods it into milk chocolate and their specular paints the fat edge band.
+     Scale DIRECT terms down inside this material only; the strip-light env survives. */
+  sh.fragmentShader = sh.fragmentShader.replace(
+    '#include <aomap_fragment>',
+    `#include <aomap_fragment>
+     reflectedLight.directDiffuse *= 0.15;
+     reflectedLight.directSpecular *= 0.22;`);
+  sh.fragmentShader = sh.fragmentShader.replace(
+    '#include <emissivemap_fragment>',
+    `#include <emissivemap_fragment>
+     {
+       vec3 nrm = normalize( vNormal );
+       vec3 vv  = normalize( vViewPosition );
+       float fr = pow( 1.0 - abs( dot( nrm, vv ) ), 3.4 );
+       /* light through the glass, keyed to where the kicker sits behind-right:
+          a deep amber that only lifts the limbs, never a uniform coat */
+       float back = .3 + .7 * max( 0.0, nrm.x * .55 - nrm.z * .35 + .45 );
+       vec3 amber = vec3( 0.45, 0.16, 0.03 );
+       totalEmissiveRadiance += amber * fr * back * 0.16 * (0.35 + diffuseColor.r * 1.6);
+     }`);
+};
+const gGlass = new THREE.LatheGeometry(GLASS, segs),
+      gGBase = new THREE.LatheGeometry(BOTTLE_BASE, segs),
+      gCap   = new THREE.LatheGeometry(CAP, segs);
+const mm = v => v * .01;
+const LABEL_ARCS = {1:112, 2:112, 3:122, 4:118, 5:118, 8:114};
+
+function buildBottle(b){
+  /* PER-VESSEL material instances, the transparent-aluminium law: the rAF writes
+     material.opacity per item, so nothing here may share an instance. */
+  const glassM = new THREE.MeshPhysicalMaterial({
+    map: glassMap, color: 0xffffff, roughness: .05, metalness: 0,
+    clearcoat: 1, clearcoatRoughness: .05,
+    reflectivity: .8, ior: 1.5, envMapIntensity: 1.3, specularIntensity: 1});
+  glassM.envMap = glassEnv;
+  glassM.onBeforeCompile = glassFresnel;
+  const capM = new THREE.MeshPhysicalMaterial({color: 0xB98F3E, metalness: .92,
+    roughness: .3, clearcoat: .6, clearcoatRoughness: .25,
+    metalnessMap: brushed, envMapIntensity: 1.3});
+  const bBaseM = new THREE.MeshPhysicalMaterial({color: 0x140a04, roughness: .3,
+    metalness: 0, clearcoat: .7, envMapIntensity: .5, side: THREE.DoubleSide});
+
+  const vessel = new THREE.Group();
+  vessel.scale.setScalar(TRUE_SCALE);
+  vessel.add(new THREE.Mesh(gGlass, glassM), new THREE.Mesh(gGBase, bBaseM),
+             new THREE.Mesh(gCap, capM));
+
+  /* die-cut body label: cylinder segment at the dewarp's own arc */
+  const arc = THREE.MathUtils.degToRad(LABEL_ARCS[b.asset] || 112);
+  const lh = mm(LABEL_HI - LABEL_LO);
+  const lgeo = new THREE.CylinderGeometry(mm(30.12), mm(30.12), lh, 96, 1, true, -arc/2, arc);
+  const ltex = loader.load(`bottles/${b.asset}_label.png`);
+  ltex.colorSpace = THREE.SRGBColorSpace;
+  ltex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  const labelM = new THREE.MeshStandardMaterial({map: ltex, color: 0xF4F2EE,
+    roughness: .5, metalness: 0, envMapIntensity: .5, transparent: true});
+  const label = new THREE.Mesh(lgeo, labelM);
+  label.position.y = mm(LABEL_LO) + lh/2;
+  vessel.add(label);
+
+  /* neck band: follows the glass profile at +0.2mm — a straight frustum crosses the
+     curved neck mid-band and z-fights. Foil, not paper: it carries the same strip
+     reflections the glass does, and the shield faces forward. */
+  const NB = [[17.55,162],[17.5,165],[17.1,170],[16.6,176],[16.0,182]]
+    .map(([r,y]) => new THREE.Vector2(mm(r), mm(y)));
+  const ngeo = new THREE.LatheGeometry(NB, 96);
+  const ntex = loader.load(`bottles/${b.asset}_neck.png`);
+  ntex.colorSpace = THREE.SRGBColorSpace; ntex.wrapS = THREE.RepeatWrapping;
+  const neckM = new THREE.MeshPhysicalMaterial({
+    map: ntex, color: 0xffffff, roughness: .32, metalness: .25,
+    clearcoat: .6, clearcoatRoughness: .2, envMapIntensity: .9});
+  neckM.envMap = glassEnv;
+  const neck = new THREE.Mesh(ngeo, neckM);
+  neck.rotation.y = Math.PI;
+  vessel.add(neck);
+
+  const g = new THREE.Group();
+  g.add(vessel);
+  /* stage dimensions for the wordmark's occlusion boxes and the AO patch */
+  g.userData.dims = {r: 30 * .01 * TRUE_SCALE, h: BOTTLE_H * .01 * TRUE_SCALE};
+  return g;
+}
+
+function buildCan(b){
+  const lm = new THREE.MeshPhysicalMaterial({color:0xd8d6d2, metalness:.06, roughness:.3,
+    sheen:.05, sheenRoughness:.125, sheenColor:0xffffff,
+    clearcoat:.5, clearcoatRoughness:.28, reflectivity:1, ior:2,
+    metalnessMap:brushed, envMapIntensity:.38, map:wrapTex(b.slug)});
+  /* PER-CAN material instances. This is the bug that read as "transparent aluminium"
+     for the whole build: metal/seam/base were ONE shared instance across all 8 cans,
+     and the rAF loop writes `material.opacity = vis` per can — so the last can it
+     touched (offscreen, vis 0) turned every can's crown, seam and base see-through. */
+  const vessel = new THREE.Group();
+  vessel.scale.setScalar(TRUE_SCALE);
+  vessel.add(new THREE.Mesh(gB, lm), new THREE.Mesh(gT, metal.clone()),
+        new THREE.Mesh(gBa, baseM.clone()), new THREE.Mesh(gS, seamM.clone()),
+        new THREE.Mesh(gL, lidM.clone()), new THREE.Mesh(gTab, tabM.clone()),
+        new THREE.Mesh(gRivet, tabM.clone()));
+  /* wrapTex's offset.x = .5 already centres the art at theta 0, facing the camera */
+  const g = new THREE.Group();
+  g.add(vessel);
+  g.userData.dims = {r: .33 * TRUE_SCALE, h: 1.15 * TRUE_SCALE};
+  return g;
+}
+
+const cans = BEERS.map(b => {
+  const g = b.vessel === 'bottle' ? buildBottle(b) : buildCan(b);
+  g.traverse(o => { if (o.isMesh) o.castShadow = true; });
+  scene.add(g);
+  return g;
+});
+
+/* real lighting: shadow-mapped key + soft ground catcher + rim separation */
+const GROUND_Y = -.585;
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30),
+  new THREE.ShadowMaterial({opacity:.5}));
+ground.rotation.x = -Math.PI/2; ground.position.y = GROUND_Y;
+ground.receiveShadow = true; ground.renderOrder = 2; scene.add(ground);
+
+/* ---------- floor reflection, done exactly ----------
+   Previously this negated rotation.x/z AND applied scale.y = -s. That is a double
+   correction: negating Euler components is only the inverse of a Y-mirror for rotation
+   about the mirror axis itself, so with the cans idling on all three axes the error
+   cancelled at rest and blew up under rotation. That was the "glitch". The fix is to
+   never decompose: reflect the whole world matrix in one step. */
+renderer.localClippingEnabled = true;
+const REFLECT = new THREE.Matrix4();
+/* normal (0,-1,0), constant gy => distanceToPoint = -y + gy, kept only where y <= gy.
+   Nothing belonging to a reflection can ever paint above the floor line, which is what
+   was ghosting the can's own base and reading as see-through. */
+const mirrorClip = new THREE.Plane(new THREE.Vector3(0,-1,0), GROUND_Y);
+const mirrors = cans.map(can => {
+  const m = can.clone();
+  m.matrixAutoUpdate = false;
+  m.traverse(o => { if (o.isMesh) {
+    o.material = o.material.clone();
+    o.material.transparent = true; o.material.opacity = .12;
+    o.material.depthWrite = false; o.material.depthTest = true;
+    /* BackSide, NOT DoubleSide. The reflection matrix has determinant -1, which reverses
+       winding; BackSide sets three's `flipSided` (an unconditional normal negation) and
+       culls the correct face, giving one correctly-lit surface instead of two coincident
+       double-sided ones fighting over the depth buffer. */
+    o.material.side = THREE.BackSide;
+    o.material.envMapIntensity *= .35;
+    o.material.roughness = Math.max(o.material.roughness, .8);
+    /* a reflection in a matte floor is soft: the label is there, but blurred past
+       reading — you feel the can, you can't read it */
+    if (o.material.map) {
+      const src = o.material.map;
+      const assign = bt => { o.material.map = bt; o.material.needsUpdate = true; };
+      if (src.userData.blur) assign(src.userData.blur);
+      else src.userData.onBlur = assign;
+    }
+    o.material.clippingPlanes = [mirrorClip];
+    o.renderOrder = 1;
+    o.castShadow = false; o.receiveShadow = false;
+    /* fade with distance below the floor, the way a real polished floor does */
+    o.material.onBeforeCompile = sh => {
+      sh.uniforms.uGy = {value:GROUND_Y}; sh.uniforms.uFade = {value:.45};
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vWP;')
+        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWP = worldPosition.xyz;');
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vWP;\nuniform float uGy;\nuniform float uFade;')
+        .replace('#include <dithering_fragment>',
+          'gl_FragColor.a *= 1.0 - clamp((uGy - vWP.y)/uFade, 0.0, 1.0);\n#include <dithering_fragment>');
+      o.material.userData.shader = sh;
+    };
+  }});
+  scene.add(m); return m;
+});
+
+/* contact AO: tight dark radial pressed under each can, grounds it on the glass floor */
+const aoTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const x = c.getContext('2d'); const g = x.createRadialGradient(128,128,6,128,128,120);
+  g.addColorStop(0,'rgba(0,0,0,.72)'); g.addColorStop(.45,'rgba(0,0,0,.3)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle = g; x.fillRect(0,0,256,256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
+const aos = cans.map(() => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0,.42),
+    new THREE.MeshBasicMaterial({map:aoTex, transparent:true, depthWrite:false, opacity:.55}));
+  m.rotation.x = -Math.PI/2; m.renderOrder = 3; scene.add(m); return m;
+});
+
+/* ink pool: additive radial glow under the focused can, tinted per flavor */
+const glowTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const x = c.getContext('2d'); const g = x.createRadialGradient(128,128,10,128,128,124);
+  g.addColorStop(0,'rgba(255,255,255,.9)'); g.addColorStop(.5,'rgba(255,255,255,.28)');
+  g.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle = g; x.fillRect(0,0,256,256);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
+const glow = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.5),
+  new THREE.MeshBasicMaterial({map:glowTex, transparent:true, depthWrite:false,
+    blending:THREE.AdditiveBlending, color:new THREE.Color('#C8502E'), opacity:.13}));
+glow.rotation.x = -Math.PI/2; glow.position.y = GROUND_Y + .002; glow.renderOrder = 4; scene.add(glow);
+
+/* ciao's rig, verbatim from their source: two spots at intensity 50, distance 8,
+   penumbra 1, decay .1 — a top light angled forward and, crucially, an UNDER light.
+   The under light is standard beverage photography: it puts the glossy sweep on the
+   lower third of the can, which is exactly the "cast light" our old rig was missing. */
+/* MEASURED: their product photographs run 78..248 luminance across the barrel — a
+   170-unit cylindrical gradient. Our render was flat because all three spots carried
+   ciao's `decay: .1`, which is almost no falloff, so front, under and rear filled the
+   body evenly from three directions. Physically-correct decay 2 (intensities rescaled
+   by distance squared) plus a dominant key restores the dark limb. */
+/* ---------- the horizon ----------
+   Kaldi's own world is a winter night in Eyjafjörður: their photography stands the
+   bottles in snow with the mountains behind. Here the room does the same in three
+   dimensions: the RIDDARINN from their own label art stands near, and the mountain
+   peaks from the Neipa art hold the far ridge. Additive against a near-black room
+   means only the light artwork registers and there is no rectangle edge to hide. */
+/* Both planes ship desaturated so material.color carries the hue, and the NIGHT
+   ITSELF re-inks with the focused beer. At rest it is moonlit snow. */
+const HZ_GOLD = new THREE.Color('#7FA8BD'), HZ_TMP = new THREE.Color();
+const knightTex = loader.load('img/kaldi/knight-grey.png');
+knightTex.colorSpace = THREE.SRGBColorSpace;
+const ridgeTex = loader.load('img/kaldi/ridge-grey.png');
+ridgeTex.colorSpace = THREE.SRGBColorSpace;
+const mkLand = (tex, opacity) => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
+    new THREE.MeshBasicMaterial({map:tex, transparent:true, opacity,
+      color:HZ_GOLD.clone(), blending:THREE.AdditiveBlending, depthWrite:false}));
+  m.renderOrder = -1; scene.add(m); return m;
+};
+const horizon = mkLand(knightTex, .34);     /* the knight the bottles stand before */
+const horizonFar = mkLand(ridgeTex, .12);   /* the peaks, farther and fainter: depth */
+const HZ_Z = -4.2, HZ_FAR_Z = -7.5;
+const HZ_RATIO = 477/1200, HZ_FAR_RATIO = 240/900;   /* each artwork's own aspect */
+function fitLand(mesh, z, widen, lift, ratio){
+  const dist = camera.position.z - z;
+  const h = 2 * Math.tan(camera.fov * Math.PI/360) * dist;
+  /* no 7-unit floor here: that floor was tuned for the desert STRIP and it blew the
+     knight up into wallpaper. A figure is allowed to be narrower than the frame. */
+  const pw = Math.max(h * camera.aspect * widen, 2.2);
+  mesh.scale.set(pw, pw * ratio, 1);
+  mesh.position.set(mesh.position.x, GROUND_Y + pw * ratio * lift, z);
+  mesh.userData.lift = pw * ratio * lift;
+}
+function sizeHorizon(){
+  /* the knight stands NARROWER than the desert did: a figure holding the centre,
+     shoulders just past the line-up, while the far peaks carry the width */
+  fitLand(horizon, HZ_Z, .62, .04, HZ_RATIO);
+  fitLand(horizonFar, HZ_FAR_Z, 1.15, .16, HZ_FAR_RATIO);
+}
+sizeHorizon();
+
+/* dust: motes drifting through the key light, the air of the room */
+const DUST_N = innerWidth < 768 ? 90 : 170;
+const dustBase = new Float32Array(DUST_N * 3);
+for (let i = 0; i < DUST_N; i++){
+  dustBase[i*3]   = (Math.random() - .5) * 4.6;
+  dustBase[i*3+1] = GROUND_Y + Math.random() * 1.9;
+  dustBase[i*3+2] = -1.2 + Math.random() * 2.2;
+}
+const dustGeo = new THREE.BufferGeometry();
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustBase.slice(), 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({
+  color:0xDCE8F0, size:.014, sizeAttenuation:true, transparent:true, opacity:.3,
+  blending:THREE.AdditiveBlending, depthWrite:false}));
+scene.add(dust);
+
+const key = new THREE.SpotLight(0xffffff, 150, 9, Math.PI/4, .85, 2);
+key.position.set(-1.6, 2.7, 2.2); key.target.position.set(0, 0, 0);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.bias = -0.0004;
+key.shadow.radius = 5;
+key.shadow.camera.near = .5; key.shadow.camera.far = 12;
+scene.add(key, key.target);
+/* a whisper, not a second key: just the glossy sweep along the lower third */
+const under = new THREE.SpotLight(0xffffff, 26, 9, Math.PI/3, 1, 2);
+under.position.set(-.4, -2.4, 2.2); under.target.position.set(0, 0, 1.4);
+scene.add(under, under.target);
+/* edge separation only — narrow, from behind, so it never fills the dark limb */
+const rim = new THREE.SpotLight(0xffffff, 90, 10, Math.PI/7, .55, 2);
+rim.position.set(1.5, 1.7, -2.4); scene.add(rim, rim.target);
+/* zenith: the HDR strips live at the horizon, so up-facing surfaces (can ENDS,
+   shoulders) caught nothing and read as rubber. A soft warm downlight is the sky. */
+const zenith = new THREE.DirectionalLight(0xfff0dd, .85);
+zenith.position.set(.3, 4, .6); scene.add(zenith, zenith.target);
+
+/* Post: a half-res UnrealBloom at threshold 1 so ONLY the true HDR highlights bloom.
+   ciao runs 0.1/0.1/1 through an EffectComposer; without it, high-range speculars
+   clip flat instead of blooming the way a camera's does. */
+/* MSAA HAS TO LIVE ON THIS TARGET. `antialias:true` on the renderer only applies to the
+   default framebuffer, and everything here is drawn into the composer's target instead,
+   so with samples:0 every silhouette was hard-aliased and crawled while the cans moved.
+   WebGL2 resolves multisampling in hardware, which is far cheaper than any post-process
+   AA pass. Phones get 2 samples; anything without WebGL2 falls back to 0 gracefully. */
+const MSAA = renderer.capabilities.isWebGL2 ? (innerWidth < 768 ? 2 : 4) : 0;
+const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(
+  innerWidth * renderer.getPixelRatio(), innerHeight * renderer.getPixelRatio(),
+  {type: THREE.HalfFloatType, samples: MSAA}));
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(innerWidth*.5, innerHeight*.5), .06, .25, 1.05);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+/* ---------- the journey panels: one stacked block per beer ----------
+   Nothing here is a trigger callback or a textContent swap. Every panel's opacity
+   and offset is a pure function of `data.focus`, so the copy crossfades exactly as
+   fast as the can travels, at any scroll speed, in either direction. */
+const panelHost = document.getElementById('panels');
+panelHost.innerHTML = BEERS.map(b => `
+  <article class="bp" aria-hidden="true">
+    <h2>${b.name}</h2>
+    <div class="row"><span class="abv">${b.abv}</span><p>${b.desc}</p></div>
+  </article>`).join('');
+const panels = [...panelHost.querySelectorAll('.bp')];
+document.getElementById('rail').innerHTML = BEERS.map(() => '<i></i>').join('');
+const ticks = [...document.getElementById('rail').querySelectorAll('i')];
+const fidx = document.getElementById('fidx');
+document.getElementById('ftot').textContent = String(BEERS.length).padStart(2,'0');
+
+/* a screen-reader-only plain list, since the visual panels are opacity-driven */
+const srList = document.createElement('div');
+srList.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)';
+srList.innerHTML = '<h2>Bjórarnir</h2><ul>' + BEERS.map(b =>
+  `<li>${b.name}, ${b.abv}. ${b.desc}</li>`).join('') + '</ul>';
+document.getElementById('gamme').appendChild(srList);
+
+const INK_A = new THREE.Color(), INK_B = new THREE.Color(), INK = new THREE.Color();
+const WHITE = new THREE.Color('#ffffff'), BLACK = new THREE.Color('#0A0E14');
+let lastIdx = -1, lastInkHex = -1;
+/* Every per-frame style write below is guarded against writing a value the element
+   already has. The scene still computes continuously; only the DOM writes are
+   deduplicated, so nothing moves differently, it just stops re-invalidating style
+   for values that did not change. */
+const panelState = panels.map(() => ({a:-1, y:NaN, v:''}));
+function applyFlavorDOM(){
+  const f = Math.max(0, Math.min(BEERS.length - 1, data.focus));
+  const i0 = Math.floor(f), i1 = Math.min(BEERS.length - 1, i0 + 1), t = f - i0;
+
+  /* panels belong to the single-can act: they fade up as the row collapses */
+  const act = 1 - data.spread;
+  panels.forEach((el, i) => {
+    const d = Math.abs(f - i);
+    /* quantised well below perception: 1/1000 opacity, 1/20 px */
+    const a = Math.round(Math.max(0, 1 - d * 1.5) * act * 1000) / 1000;
+    const y = Math.round((f - i) * 600) / 20;
+    const st = panelState[i];
+    if (a !== st.a){
+      el.style.opacity = a; st.a = a;
+      const v = a > .015 ? 'visible' : 'hidden';
+      if (v !== st.v){ el.style.visibility = v; st.v = v; }
+    }
+    if (y !== st.y){ el.style.transform = `translate3d(0,${y}px,0)`; st.y = y; }
+  });
+
+  /* ink is interpolated, not stepped: the room colour bleeds from one beer to the next */
+  INK_A.set(BEERS[i0].ink); INK_B.set(BEERS[i1].ink);
+  INK.copy(INK_A).lerp(INK_B, t);
+  /* A custom property set on the ROOT invalidates style for the whole document, and
+     this ran every frame: ~500 elements recalculated per frame, including while parked
+     in a section that has no cans in it. The value is only ever read as an 8-bit hex,
+     so write it only when that hex actually changes. Quantising to a step of 3/255 per
+     channel is invisible on a colour this soft but cuts how often the write fires while
+     the ink is travelling between two beers. */
+  const q = v => Math.min(255, Math.round(v * 255 / 3) * 3);
+  const inkHex = (q(INK.r) << 16) | (q(INK.g) << 8) | q(INK.b);
+  if (inkHex !== lastInkHex){
+    lastInkHex = inkHex;
+    document.documentElement.style.setProperty('--ink',
+      '#' + inkHex.toString(16).padStart(6, '0'));
+  }
+  glow.material.color.copy(INK);
+  rim.color.copy(INK).lerp(WHITE, .6);
+  /* the LAND takes the focused beer's ink as you travel, and returns to gold when the
+     family reassembles: one desert, many inks, enacted rather than stated */
+  HZ_TMP.copy(HZ_GOLD).lerp(INK, .65 * act);
+  horizon.material.color.copy(HZ_TMP);
+  horizonFar.material.color.copy(HZ_TMP);
+  if (tintScene) data.bg.copy(BLACK).lerp(INK, .12 * act);   /* black room until the journey begins */
+
+  const idx = Math.round(f);
+  if (idx !== lastIdx){
+    lastIdx = idx;
+    fidx.textContent = String(idx + 1).padStart(2, '0');
+    ticks.forEach((el, i) => el.classList.toggle('on', i === idx));
+  }
+}
+let tintScene = true;
+
+/* ---------- wordmark ink ----------
+   Each letter of KALDI is printed in the ink of the vessel standing behind IT,
+   so the word carries several inks at once as the row slides past.
+   Deliberately NOT sampled from the framebuffer: readPixels on the default
+   framebuffer measured 11.9ms per call against 1.05ms for the whole render, a stall
+   an order of magnitude worse than the thing it was inspecting. We already know
+   exactly where every can is, so the occlusion is projected instead. Free, exact,
+   and it can use each can's own ink rather than the focused one. */
+const wmLetters = [...document.querySelectorAll('#gamme h1 i')];
+const LACQUER = new THREE.Color('#EDF2F4');
+const INKS_DARK = BEERS.map(b => new THREE.Color(b.ink).multiplyScalar(.55));
+const wmCur = wmLetters.map(() => new THREE.Color('#EDF2F4'));
+const wmTgt = wmLetters.map(() => new THREE.Color('#EDF2F4'));
+const wmLastHex = wmLetters.map(() => -1);
+let lastStageOp = -1;
+const canBoxes = [];
+const PRJ = new THREE.Vector3();
+/* per-vessel dims live on each group's userData.dims (bottle and can differ) */
+let wmBox = null;
+function measureWordmark(){
+  const h1 = document.querySelector('#gamme h1');
+  const hb = h1.getBoundingClientRect();
+  const rects = wmLetters.map(el => el.getBoundingClientRect());
+  wmBox = (hb.width > 10 && rects.every(r => r.width > 0)) ? {rects} : null;
+}
+function projTo(x, y, z, out){
+  PRJ.set(x, y, z).project(camera);
+  out.x = (PRJ.x * .5 + .5) * innerWidth;
+  out.y = (1 - (PRJ.y * .5 + .5)) * innerHeight;
+}
+const _a = {x:0,y:0}, _b = {x:0,y:0}, PRJ2 = {x:0,y:0};
+function inkWordmark(){
+  if (!wmBox) return;
+  const lit = data.opacity * (1 - data.exit) > .05;   /* own scope, own computation */
+  for (let i = 0; i < wmLetters.length; i++){
+    const r = wmBox.rects[i];
+    let best = 0, bestIdx = -1;
+    if (lit) for (const bx of canBoxes){
+      if (bx.bottom < r.top || bx.top > r.bottom) continue;
+      const ov = Math.min(bx.right, r.right) - Math.max(bx.left, r.left);
+      if (ov <= 0) continue;
+      const cov = Math.min(1, ov / r.width) * bx.vis;
+      if (cov > best){ best = cov; bestIdx = bx.i; }
+    }
+    if (best > .04 && bestIdx >= 0){
+      const t = Math.min(1, best * 1.4), s = t*t*(3 - 2*t);
+      wmTgt[i].copy(LACQUER).lerp(INKS_DARK[bestIdx], s);
+    } else wmTgt[i].copy(LACQUER);
+  }
+}
+addEventListener('resize', measureWordmark);
+
+/* pointer parallax: the camera breathes with the cursor, lerped */
+const ptr = {x:0, y:0, cx:0, cy:0};
+addEventListener('pointermove', e => {
+  ptr.x = e.clientX/innerWidth - .5; ptr.y = e.clientY/innerHeight - .5;
+}, {passive:true});
+
+/* ---------- rAF: apply data to the scene (carousel lerp = ciao's delta*10) ---------- */
+let t0 = performance.now(), last = t0;
+gsap.ticker.add(() => {
+  const now = performance.now(), dt = Math.min(.05, (now-last)/1000); last = now;
+  const t = (now-t0)/1000;
+  data.focus += (data.focusTarget - data.focus) * Math.min(1, dt*10);
+
+  const idle = Math.sin(t*.44)*.227 + Math.sin(t*.17)*.064;
+  /* A scrub is a CATCH-UP, not a position: flick the wheel hard and the scroll races
+     past while `exit` is still interpolating, which left the fixed stage painting cans
+     over sections far below (the "picture following the page down"). The scrub still
+     owns the whole transition; these clamps only assert the end states, which scroll
+     position already decided. */
+  if (exitST){
+    if (exitST.progress >= .995) data.exit = 1;
+    else if (exitST.progress <= .005) data.exit = 0;
+  }
+  /* rise and exit fold into the single vertical offset the scene actually uses */
+  /* 1.75, not 1.5: the bottles stand taller than the old cans, and the exit must
+     still carry their necks fully below the frame edge before the stage unfixes */
+  const yOff = data.y - 1.75 * ((1 - data.rise) + data.exit);
+  const vis0 = data.opacity * (1 - data.exit);
+  const gy = GROUND_Y + yOff;
+  /* collapsing the carousel pushes neighbours OUT past the frame, never through
+     the focused can — real objects exit, they do not merge */
+  /* Visibility is a function of where the can actually IS on screen, not of which
+     scroll state we are in. The old branch flipped opacity the instant spread
+     crossed a threshold, which is what made cans blink out mid-frame. A can now
+     stays fully opaque until its own body has cleared the frame edge, then fades
+     over the last stretch — it slides out, it never cuts. */
+  const halfW = Math.tan(camera.fov * Math.PI/360) * camera.position.z * camera.aspect;
+  const outA = halfW + .30, outB = halfW + .95;
+  /* collapsed spacing is derived from the frame, not hard-coded: whatever the
+     viewport, the neighbours are exactly far enough out to have left it */
+  const sep = data.spread + (1 - data.spread) * ((outB + .45) / SPACING);
+  canBoxes.length = 0;
+  camera.updateMatrixWorld();
+  cans.forEach((can, i) => {
+    const rel = i - data.focus;
+    const x = data.x + rel * SPACING * sep;
+    const ax = Math.abs(x);
+    const e = Math.min(1, Math.max(0, (ax - outA) / (outB - outA)));
+    const vis = 1 - e*e*(3 - 2*e);   /* smoothstep, so the last of the fade has no edge */
+    const mir = mirrors[i], ao = aos[i];
+    can.visible = vis > .02; mir.visible = can.visible; ao.visible = can.visible;
+    if (!can.visible) return;
+    const swing = Math.sin(Math.min(1, Math.abs(rel)) * Math.PI) * .31 * Math.sign(rel||1);
+    can.rotation.y = idle + rel * .13 * data.spread - swing * (1-data.spread);
+    can.rotation.x = Math.sin(t*.31)*.045;
+    can.rotation.z = Math.sin(t*.23 + i)*.019;
+    const s = data.scale * (1 - .1*Math.min(1,Math.abs(rel))*data.spread);
+    can.scale.setScalar(s);
+    const bob = Math.sin(t*.55 + i*.9)*.012;
+    can.position.set(x, -.57 + yOff + bob, -Math.abs(rel)*.28*data.spread);
+    /* traverse() walks the subtree and allocates a closure for every can, every frame.
+       The hierarchy never changes after build, so the mesh list is cached on first use.
+       Identical writes, just without re-walking the tree 8 times a frame. */
+    let cm = can.userData.meshes;
+    if (!cm){ cm = []; can.traverse(o => { if (o.isMesh) cm.push(o); }); can.userData.meshes = cm; }
+    const tr = vis < .999, cs = vis > .6;
+    for (let k = 0; k < cm.length; k++){
+      const m = cm[k].material;
+      m.opacity = vis; m.transparent = tr; cm[k].castShadow = cs;
+    }
+    /* exact mirror: reflect the whole world matrix, never the decomposed parts.
+       updateMatrixWorld first or we reflect LAST frame's transform (a one-frame lag
+       that reads as stutter while the can rotates). */
+    can.updateMatrixWorld(true);
+    REFLECT.set(1,0,0,0,  0,-1,0,2*gy,  0,0,1,0,  0,0,0,1);
+    mir.matrix.multiplyMatrices(REFLECT, can.matrixWorld);
+    mir.matrixWorldNeedsUpdate = true;
+    let mm = mir.userData.meshes;
+    if (!mm){ mm = []; mir.traverse(o => { if (o.isMesh) mm.push(o); }); mir.userData.meshes = mm; }
+    const mo = vis * .12;
+    for (let k = 0; k < mm.length; k++){
+      const m = mm[k].material;
+      m.opacity = mo;
+      const sh = m.userData.shader; if (sh) sh.uniforms.uGy.value = gy;
+    }
+    ao.position.set(x, gy + .004, can.position.z + .02);
+    ao.scale.setScalar(s);
+    ao.material.opacity = .55 * vis;
+    /* screen box of this vessel, for the wordmark's per-letter ink. Bottles and cans
+       carry their own dims, so a bottle inks the letters it actually stands behind. */
+    if (vis > .05){
+      const dm = can.userData.dims;
+      projTo(x - dm.r*s, can.position.y + dm.h*s*.5, can.position.z, _a);
+      projTo(x + dm.r*s, can.position.y, can.position.z, _b);
+      let top = 0; projTo(x, can.position.y + dm.h*s, can.position.z, PRJ2); top = PRJ2.y;
+      canBoxes.push({i, left:_a.x, right:_b.x, top, bottom:_b.y, vis});
+    }
+  });
+  /* the land travels with the journey at a fraction of the carousel's motion, the far
+     ridge slower still, so the room has true depth rather than a backdrop */
+  horizon.position.x = -data.focus * .085 - ptr.cx * .05;
+  horizon.position.y = GROUND_Y + horizon.userData.lift + yOff * .35;
+  horizon.material.opacity = .34 * vis0;
+  horizon.visible = vis0 > .01;
+  horizonFar.position.x = -data.focus * .038 - ptr.cx * .02;
+  horizonFar.position.y = GROUND_Y + horizonFar.userData.lift + yOff * .2;
+  horizonFar.material.opacity = .12 * vis0;
+  horizonFar.visible = horizon.visible;
+  /* dust drifts; it breathes with the same light the cans live in */
+  {
+    const dp = dust.geometry.attributes.position;
+    for (let i = 0; i < DUST_N; i++){
+      const b3 = i*3;
+      dp.array[b3]   = dustBase[b3]   + Math.sin(t*.13 + i*1.7) * .09;
+      dp.array[b3+1] = dustBase[b3+1] + Math.sin(t*.08 + i*2.1) * .06 + yOff * .25;
+      dp.array[b3+2] = dustBase[b3+2] + Math.cos(t*.11 + i*1.3) * .07;
+    }
+    dp.needsUpdate = true;
+    dust.material.opacity = .3 * vis0;
+    dust.visible = vis0 > .01;
+  }
+  ground.position.y = gy;
+  mirrorClip.constant = gy;
+  glow.position.set(data.x, gy + .002, 0);
+  glow.material.opacity = .13 * vis0 * (data.spread < .5 ? 1.5 : 1);
+  ptr.cx += (ptr.x - ptr.cx) * Math.min(1, dt*3);
+  ptr.cy += (ptr.y - ptr.cy) * Math.min(1, dt*3);
+  camera.position.x = ptr.cx * .16;
+  camera.position.y = .02 - ptr.cy * .1;
+  applyFlavorDOM();
+  const so = Math.round(vis0 * 1000) / 1000;
+  if (so !== lastStageOp){ stage.style.opacity = so; lastStageOp = so; }
+  composer.render();
+  inkWordmark();
+  const kl = Math.min(1, dt * 7);
+  wmLetters.forEach((el, i) => {
+    wmCur[i].lerp(wmTgt[i], kl);
+    /* compare the packed hex, so a settled letter costs no string build and no write */
+    const h = wmCur[i].getHex();
+    if (h !== wmLastHex[i]){ wmLastHex[i] = h; el.style.color = '#' + wmCur[i].getHexString(); }
+  });
+});
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+  bloom.setSize(innerWidth*.5, innerHeight*.5);
+  sizeHorizon();
+});
+
+/* ---------- entrance ----------
+   Fresh session at the top: the reveal is the finale in REVERSE — confirm your age
+   and the whole family RISES through the floor into the establishing row while the
+   gate wipes upward like a lifting door. Sessions that already passed the gate (or
+   land mid-page from a refresh) get the quiet fade; on a refresh deep in the page
+   the exit scrub owns opacity and nothing may fight it. */
+/* The stage is ON by default. It is never faded in by a tween, so there is no state
+   in which a missed or overridden tween can leave it invisible; before the gate is
+   answered the gate itself covers it. */
+const freshTop = gateShown && scrollY < innerHeight * .5;
+if (freshTop) {
+  data.rise = 0;                     /* below the floor, waiting in the dark */
+  cinematicEnter = () => {
+    cinematicEnter = null;
+    gsap.timeline()
+      .to('#gate .crest, #gate p, #gate .row, #gate .under',
+        {y:-26, opacity:0, duration:.45, ease:'power2.in', stagger:.04}, 0)
+      .to(gate, {clipPath:'inset(0 0 100% 0)', duration:.95, ease:'expo.inOut',
+        onStart(){ gate.style.clipPath = 'inset(0 0 0% 0)'; },
+        onComplete(){ gate.classList.add('hide'); }}, .18)
+      .to(data, {rise:1, duration:1.7, ease:'expo.out'}, .42)
+      /* the key light sweeps across the family as it rises: one travelling glint */
+      .fromTo(key.position, {x:2.6}, {x:-1.6, duration:1.8, ease:'power2.inOut'}, .5)
+      .fromTo(key, {intensity:340}, {intensity:150, duration:1.8, ease:'power2.out'}, .5)
+      .to('#gamme h1 .w > span', {y:0, duration:.9, ease:'expo.out', stagger:.08}, .78);
+  };
+} else {
+  gsap.timeline({delay:.15})
+    .to('#gamme h1 .w > span', {y:0, duration:.9, ease:'expo.out', stagger:.08});
+}
+
+/* ---------- THE journey: one pass, all eight beers, nothing revisited ----------
+   The whole beer experience is this single scrubbed range. The carousel opens as a
+   row (the establishing shot), settles into one can while the scroll walks 0 -> 7,
+   and every piece of copy, the rail, the counter and the room colour are pure
+   functions of `focus`. There are no per-section triggers to snap or race. */
+function applyJourney(p){
+    const sm = t => t*t*(3 - 2*t);
+    /* three acts: the row collapses (0..9%), the walk through all eight (9..88%),
+       and the FINALE (88..100%): the whole family returns as one line-up, bookending
+       the establishing shot, ready to exit together. No beer lingers alone. */
+    const k = sm(Math.min(1, p / .09));
+    const fin = sm(Math.max(0, (p - .88) / .12));
+    data.spread = (1 - k) + fin;
+    data.focusTarget = Math.min(1, Math.max(0, (p - .09) / .79)) * (BEERS.length - 1);
+    /* the can drifts right and eases back a step as the copy takes the left column —
+       full label readable, h1 clear above it, panels clear beside it */
+    data.x = .34 * k * (1 - fin);
+    data.scale = (1 - .13 * k) * (1 - fin) + .8 * fin;
+    data.y = .05 * k * (1 - fin);
+}
+const journeyST = ScrollTrigger.create({
+  trigger:'#gamme', start:'top top', end:'bottom bottom', scrub:.55, refreshPriority:1,
+  onUpdate(self){ applyJourney(self.progress); },
+});
+/* a refresh mid-journey must land in the right state even if no scroll event ever
+   fires; same again after every ScrollTrigger.refresh (load, resize) — and the focus
+   lerp is skipped straight to target so the can doesn't visibly chase it on arrival */
+/* while the cinematic entrance is still waiting behind the gate, the cans sit below
+   the floor — a sync at progress 0 must not haul them up early */
+function syncJourney(){
+  if (cinematicEnter && journeyST.progress === 0) return;
+  applyJourney(journeyST.progress); data.focus = data.focusTarget;
+}
+syncJourney();
+ScrollTrigger.addEventListener('refresh', () => {
+  if (cinematicEnter && journeyST.progress === 0) return;
+  applyJourney(journeyST.progress);
+});
+
+/* the exit: the finale row sinks through the floor as the brewer arrives — every can
+   leaves the theatre together, reflections meeting them at the floor line. Scrubbed,
+   so scrolling back up raises them right back out. */
+const exitTL = gsap.timeline({scrollTrigger:{trigger:'#profil', start:'top 96%', end:'top 22%', scrub:.7,
+  onEnter(){ tintScene = false; }, onLeaveBack(){ tintScene = true; }}})
+  .fromTo(data, {exit:0}, {exit:1, ease:'none'}, 0)   /* explicit from: a scrub must
+      never be allowed to capture an implicit start value */
+  .to(data.bg, {r:.030, g:.022, b:.014, ease:'none'}, 0);
+const exitST = exitTL.scrollTrigger;
+
+/* the banner drifts as it passes; the drawing needs nothing else */
+gsap.fromTo('#profil .banner img', {xPercent:0}, {xPercent:-13, ease:'none',
+  scrollTrigger:{trigger:'#profil .eydi', start:'top bottom', end:'bottom top', scrub:1.1}});
+
+/* ---------- seasonal fan (mechanic vendored from 21st.dev card-fan-carousel) ---------- */
+{
+  const fcards = [...document.querySelectorAll('#sfan .fcard')];
+  /* below 760 the CSS stacks these into a grid; running the fan maths on top would
+     fight it with inline transforms, so the whole gesture simply does not apply */
+  const fanOK = matchMedia('(min-width:821px)');
+  const N = fcards.length, C = (N - 1) / 2;
+  const mult = () => innerWidth < 480 ? .30 : innerWidth < 768 ? .5 : innerWidth < 1024 ? .75 : 1;
+  /* two cards are a pair, not a full hand: shrink the fan geometry with N so they
+     sit shoulder to shoulder instead of at the extreme angles of a five-card spread */
+  const F = Math.min(1, (N - 1) / 4);
+  const slotOf = s => {
+    const d = (s - C) / C, ad = Math.abs(d);
+    return { rot: d * 21 * F, scale: 1 - .2244 * ad * ad * F,
+             x: d * 21 * F * mult(), y: ad * ad * 6.2 * F, z: 10 - Math.abs(s - C) };
+  };
+  if (fanOK.matches) fcards.forEach((el, s) => {
+    const p = slotOf(s);
+    gsap.set(el, {x: p.x + 'rem', y: (p.y + 12) + 'rem', rotation: 0, scale: .5, opacity: 0, zIndex: p.z});
+  });
+  if (fanOK.matches) ScrollTrigger.create({
+    trigger: '#sfan', start: 'top 78%', once: true,
+    onEnter(){
+      fcards.forEach((el, s) => {
+        const p = slotOf(s);
+        gsap.to(el, {x: p.x + 'rem', y: p.y + 'rem', rotation: p.rot, scale: p.scale, opacity: 1,
+          duration: 1.2, ease: 'elastic.out(1.05,.78)', delay: .15 + s * .07});
+      });
+    },
+  });
+  /* hover: the touched card lifts, the rest of the hand spreads away from it */
+  const spread = hovered => {
+    fcards.forEach((el, s) => {
+      const p = slotOf(s);
+      let x = p.x, y = p.y, rot = p.rot, sc = p.scale;
+      if (hovered !== null) {
+        const dist = Math.abs(s - hovered);
+        if (s === hovered) { y -= 2.2; sc *= 1.07; }
+        else {
+          const push = 5.5 / (dist + .6) * mult();
+          if (s < hovered) { x -= push; rot -= 3 / (dist + 1); }
+          else             { x += push; rot += 3 / (dist + 1); }
+        }
+      }
+      gsap.to(el, {x: x + 'rem', y: y + 'rem', rotation: rot, scale: sc,
+        duration: .5, delay: hovered === null ? Math.abs(s - C) * .02 : Math.abs(s - hovered) * .02,
+        ease: 'elastic.out(1,.75)', overwrite: 'auto'});
+      gsap.set(el, {zIndex: hovered === s ? 20 : slotOf(s).z});
+    });
+  };
+  if (fanOK.matches) {
+    fcards.forEach((el, s) => el.addEventListener('pointerenter', () => spread(s)));
+    document.getElementById('sfan').addEventListener('pointerleave', () => spread(null));
+  }
+}
+
+/* ---------- reveals ---------- */
+/* masked headline rise: every section h2 gets the hero's own device */
+document.querySelectorAll('main section h2:not(#gamme h2)').forEach(h => {
+  const label = h.textContent.trim();
+  h.setAttribute('aria-label', label);
+  h.classList.add('mask-h');
+  h.innerHTML = label.split(' ').map(w =>
+    `<span class="w" aria-hidden="true"><span>${w}</span></span>`).join(' ');
+  gsap.to(h.querySelectorAll('.w > span'), {y:0, duration:.9, ease:'expo.out', stagger:.07,
+    scrollTrigger:{trigger:h, start:'top 86%'}});
+});
+
+/* the brewer's argument arrives word by word, scrubbed */
+const lede = document.querySelector('#rok .lede');
+lede.innerHTML = lede.textContent.trim().split(/\s+/).map(w =>
+  `<span class="wd${w === 'Valgeir' ? ' gold' : ''}">${w}</span>`).join(' ');
+gsap.to('#rok .lede .wd', {opacity:1, stagger:.05, ease:'none',
+  scrollTrigger:{trigger:'#rok .lede', start:'top 82%', end:'top 34%', scrub:.8}});
+
+/* photography: clip-path aperture + settle from scale */
+document.querySelectorAll('.imgw').forEach(w => {
+  const img = w.querySelector('img');
+  const full = !!w.closest('#hus .full');
+  gsap.fromTo(img, {scale: full ? 1.22 : 1.14}, {scale:1, ease:'none',
+    scrollTrigger:{trigger: full ? '#hus .full' : w, start:'top 96%', end: full ? 'bottom 60%' : 'top 26%', scrub:1}});
+  if (!full) gsap.fromTo(w,
+    {clipPath:'inset(9% 7% 9% 7% round 16px)'},
+    {clipPath:'inset(0% 0% 0% 0% round 16px)', ease:'none',
+     scrollTrigger:{trigger:w, start:'top 94%', end:'top 38%', scrub:1}});
+});
+
+document.querySelectorAll('.rv').forEach(el => {
+  const band = el.closest('#hus .full');   /* bottom-anchored copy on the full-bleed band keys off the band */
+  gsap.fromTo(el, {opacity:0, y:26}, {opacity:1, y:0, duration:.8, ease:'power3.out',
+    scrollTrigger: band ? {trigger:band, start:'top 45%'} : {trigger:el, start:'top 92%'}});
+});
+document.querySelectorAll('#urval .cell').forEach((el,i) => {
+  gsap.fromTo(el, {opacity:0, y:34}, {opacity:1, y:0, duration:.7, delay:(i%5)*.05,
+    ease:'power3.out', scrollTrigger:{trigger:el, start:'top 92%'}});
+});
+
+/* ---------- sermerking toy ---------- */
+const hold = document.getElementById('merkihold');
+const r2 = new THREE.WebGLRenderer({antialias:true, alpha:true});
+r2.setPixelRatio(Math.min(devicePixelRatio, 2));
+r2.toneMapping = THREE.ACESFilmicToneMapping; r2.toneMappingExposure = 1.0;
+r2.outputColorSpace = THREE.SRGBColorSpace;
+hold.appendChild(r2.domElement);
+const scene2 = new THREE.Scene();
+const cam2 = new THREE.PerspectiveCamera(20, 1, .1, 100);
+cam2.position.set(0, .02, 4.6);
+scene2.environment = hdrStudioEnv(r2);
+const label2 = new THREE.MeshPhysicalMaterial({metalness:.2, roughness:.26,
+  sheen:.05, sheenRoughness:.125, sheenColor:0xffffff, clearcoat:.5, clearcoatRoughness:.3,
+  reflectivity:1, ior:2, metalnessMap:brushed, envMapIntensity:1.0});
+const can2 = new THREE.Group();
+can2.add(new THREE.Mesh(gB, label2), new THREE.Mesh(gT, metal.clone()),
+         new THREE.Mesh(gBa, baseM.clone()), new THREE.Mesh(gS, seamM.clone()),
+         new THREE.Mesh(gL, lidM.clone()), new THREE.Mesh(gTab, tabM.clone()),
+         new THREE.Mesh(gRivet, tabM.clone()));
+can2.position.y = -.57;
+scene2.add(can2);
+
+/* the bottle counterpart: their sérmerking is offered í bæði flöskur og dósir, so the
+   configurator shows both. Same glass as the stage, the label is the live canvas. */
+const glassM2 = new THREE.MeshPhysicalMaterial({
+  map: glassMap, color: 0xffffff, roughness: .05, metalness: 0,
+  clearcoat: 1, clearcoatRoughness: .05,
+  reflectivity: .8, ior: 1.5, envMapIntensity: 1.3, specularIntensity: 1});
+glassM2.envMap = glassEnv;
+glassM2.onBeforeCompile = glassFresnel;
+const bottle2 = new THREE.Group();
+{
+  const bArc = THREE.MathUtils.degToRad(112);
+  const blh = mm(LABEL_HI - LABEL_LO);
+  bottle2.add(new THREE.Mesh(gGlass, glassM2),
+              new THREE.Mesh(gGBase, new THREE.MeshPhysicalMaterial({color: 0x140a04,
+                roughness: .3, metalness: 0, clearcoat: .7, envMapIntensity: .5,
+                side: THREE.DoubleSide})),
+              new THREE.Mesh(gCap, new THREE.MeshPhysicalMaterial({color: 0xB98F3E,
+                metalness: .92, roughness: .3, clearcoat: .6, clearcoatRoughness: .25,
+                metalnessMap: brushed, envMapIntensity: 1.3})));
+  const lg = new THREE.CylinderGeometry(mm(30.55), mm(30.55), blh, 96, 1, true, -bArc/2, bArc);
+  const lm2 = new THREE.MeshStandardMaterial({color: 0xd8d6d2, roughness: .58,
+    metalness: 0, envMapIntensity: .38, transparent: true});
+  const lb = new THREE.Mesh(lg, lm2);
+  lb.position.y = mm(LABEL_LO) + blh/2;
+  bottle2.add(lb);
+  bottle2.userData.labelM = lm2;
+}
+bottle2.scale.setScalar(.58);
+bottle2.position.y = -.57;
+bottle2.visible = false;
+scene2.add(bottle2);
+/* no floor reflection here per direction — the packshot sprite shadow grounds it */
+const shT2 = (()=>{ const c=document.createElement('canvas'); c.width=c.height=256;
+  const x=c.getContext('2d'); const g=x.createRadialGradient(118,128,8,128,128,120);
+  g.addColorStop(0,'rgba(0,0,0,.5)'); g.addColorStop(.55,'rgba(0,0,0,.2)'); g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=g; x.fillRect(0,0,256,256);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; })();
+const sh2 = new THREE.Mesh(new THREE.PlaneGeometry(1.3,.4),
+  new THREE.MeshBasicMaterial({map:shT2, transparent:true, depthWrite:false, opacity:.85}));
+sh2.rotation.x = -Math.PI/2; sh2.position.set(.06,-.585,0); scene2.add(sh2);
+const k2 = new THREE.SpotLight(0xffffff,11,8,Math.PI/4,1,.1);
+k2.position.set(-1.6,2.7,2.2); k2.target.position.set(0,0,0); scene2.add(k2,k2.target);
+const u2 = new THREE.SpotLight(0xffffff,5.5,8,Math.PI/3,1,.1);
+u2.position.set(0,-3,2); u2.target.position.set(0,0,1.8); scene2.add(u2,u2.target);
+const rim2 = new THREE.SpotLight(0xffffff,7,12,Math.PI/3,.9,.1);
+rim2.position.set(.9,1.9,-3.0); scene2.add(rim2,rim2.target);
+const zen2 = new THREE.DirectionalLight(0xfff0dd,.85); zen2.position.set(.3,4,.6);
+scene2.add(zen2, zen2.target);
+
+/* ---------- sérmerking configurator ----------
+   Four live controls: headline, sub line, which beer's ink the label is printed in,
+   and the letterform. Every wrap is cached so switching ink is instant and never
+   disposes a texture that is still bound (that leaves garbage on the mesh). */
+const merki = {text:'', sub:'', beer:6, font:'disp'};   /* Lite: the cleanest can */
+const wrapCache = new Map();
+function getWrap(key, path){
+  if (wrapCache.has(key)) return wrapCache.get(key);
+  const im = new Image();
+  im.onload = () => drawMerki();
+  im.src = path;
+  wrapCache.set(key, im);
+  return im;
+}
+const mc = document.createElement('canvas'); mc.width = 2048; mc.height = 1024;
+const mx = mc.getContext('2d');
+const merkiTex = new THREE.CanvasTexture(mc);
+merkiTex.colorSpace = THREE.SRGBColorSpace; merkiTex.wrapS = THREE.RepeatWrapping;
+merkiTex.center.set(.5,.5); merkiTex.offset.x = .5;
+/* the bottle's label canvas: same die-cut alpha as the stage labels */
+const mb = document.createElement('canvas'); mb.width = 1536; mb.height = 960;
+const mbx = mb.getContext('2d');
+/* draw in 1024x640 coordinates onto the sharper backing store */
+mbx.setTransform(1.5, 0, 0, 1.5, 0, 0);
+const merkiBottleTex = new THREE.CanvasTexture(mb);
+merkiBottleTex.colorSpace = THREE.SRGBColorSpace;
+
+function drawMerki(){
+  const beer = BEERS[merki.beer];
+  const isBottle = beer.vessel === 'bottle';
+  can2.visible = !isBottle; bottle2.visible = isBottle;
+  const dispF = "'Alpino', sans-serif", bodyF = "'Switzer', sans-serif";
+
+  if (isBottle){
+    const img = getWrap('b' + beer.asset, `bottles/${beer.asset}_label.png`);
+    if (!img.complete || !img.naturalWidth) return;
+    mbx.clearRect(0, 0, 1024, 640);
+    mbx.drawImage(img, 0, 0, 1024, 640);
+    if (merki.text || merki.sub){
+      mbx.save();
+      /* paint only where the die-cut label exists */
+      mbx.globalCompositeOperation = 'source-atop';
+      /* the patch must swallow the WHOLE printed script block on the bottle label,
+         descender flourishes included, or the leftovers read as garbage below the text */
+      const grd = mbx.createLinearGradient(0, 175, 0, 500);
+      grd.addColorStop(0, 'rgba(242,241,238,0)');
+      grd.addColorStop(.10, '#F2F1EE');
+      grd.addColorStop(.90, '#F2F1EE');
+      grd.addColorStop(1, 'rgba(242,241,238,0)');
+      mbx.fillStyle = grd; mbx.fillRect(120, 175, 784, 325);
+      mbx.textAlign = 'center';
+      if (merki.text){
+        mbx.fillStyle = '#1C1B19';
+        const t = merki.font === 'disp' ? merki.text.toUpperCase() : merki.text;
+        const size = merki.font === 'disp'
+          ? Math.min(88, 1000/Math.max(6, t.length) * 1.7)
+          : Math.min(70, 900/Math.max(6, t.length) * 1.55);
+        mbx.font = `${merki.font === 'disp' ? 900 : 700} ${size}px ${merki.font === 'disp' ? dispF : bodyF}`;
+        mbx.fillText(t, 512, merki.sub ? 305 : 330, 620);
+      }
+      if (merki.sub){
+        mbx.fillStyle = beer.ink;
+        mbx.font = `500 34px ${bodyF}`;
+        mbx.fillText(merki.sub, 512, merki.text ? 368 : 330, 560);
+      }
+      mbx.fillStyle = beer.ink;
+      mbx.font = `700 24px ${bodyF}`;
+      mbx.fillText('SÉRMERKT HJÁ KALDA', 512, 448, 480);
+      mbx.restore();
+    }
+    merkiBottleTex.needsUpdate = true;
+    bottle2.userData.labelM.map = merkiBottleTex;
+    bottle2.userData.labelM.needsUpdate = true;
+    return;
+  }
+
+  const img = getWrap(beer.slug, `wraps/${beer.slug}_wrap.jpg`);
+  if (!img.complete || !img.naturalWidth) return;
+  mx.drawImage(img, 0, 0, 2048, 1024);
+  if (merki.text || merki.sub) {
+    mx.save();
+    /* lacquer patch over the printed name block so the custom text owns the zone */
+    const grd = mx.createLinearGradient(0, 330, 0, 660);
+    grd.addColorStop(0, 'rgba(242,241,238,0)');
+    grd.addColorStop(.13, '#F2F1EE');
+    grd.addColorStop(.88, '#F2F1EE');
+    grd.addColorStop(1, 'rgba(242,241,238,0)');
+    mx.fillStyle = grd; mx.fillRect(520, 330, 1008, 330);
+    mx.textAlign = 'center';
+
+    if (merki.text) {
+      mx.fillStyle = '#1C1B19';
+      const t = merki.font === 'disp' ? merki.text.toUpperCase() : merki.text;
+      const size = merki.font === 'disp'
+        ? Math.min(120, 1600/Math.max(6, t.length) * 1.7)
+        : Math.min(92,  1400/Math.max(6, t.length) * 1.55);
+      mx.font = merki.font === 'disp'
+        ? `900 ${size}px ${dispF}`
+        : `700 ${size}px ${bodyF}`;
+      mx.fillText(t, 1024, merki.sub ? 460 : 485, 760);
+    }
+    if (merki.sub) {
+      mx.fillStyle = beer.ink;
+      mx.font = `500 40px ${bodyF}`;
+      mx.fillText(merki.sub, 1024, merki.text ? 528 : 495, 700);
+    }
+    mx.fillStyle = beer.ink;
+    mx.font = `600 28px ${bodyF}`;
+    mx.fillText('SÉRMERKT HJÁ KALDA', 1024, 600, 620);
+    mx.restore();
+  }
+  merkiTex.needsUpdate = true;
+  label2.map = merkiTex; label2.needsUpdate = true;
+}
+
+/* vessel toggle: dós/flaska jumps to the first beer shipped in that vessel; picking
+   any swatch follows that beer's real vessel and keeps the toggle honest */
+const vesselpick = document.getElementById('vesselpick');
+function syncVessel(){
+  const v = BEERS[merki.beer].vessel;
+  [...vesselpick.children].forEach(c => c.classList.toggle('on', c.dataset.v === v));
+}
+vesselpick.addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  const idx = BEERS.findIndex(b => b.vessel === btn.dataset.v);
+  if (idx >= 0){ merki.beer = idx; }
+  syncVessel();
+  [...inkpick.children].forEach((c,i) => c.setAttribute('aria-pressed', i === merki.beer));
+  drawMerki(); updateMerkiMail();
+});
+
+/* ink swatches: one per beer, because an ink IS one of their beers */
+const inkpick = document.getElementById('inkpick');
+inkpick.innerHTML = BEERS.map((b,i) =>
+  `<button type="button" data-i="${i}" style="background:${b.ink}"
+     aria-pressed="${i===merki.beer}" title="${b.name}"><span class="sr">${b.name}</span></button>`).join('');
+inkpick.addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  merki.beer = +btn.dataset.i;
+  [...inkpick.children].forEach(c => c.setAttribute('aria-pressed', c === btn));
+  syncVessel();
+  drawMerki(); updateMerkiMail();
+});
+syncVessel();
+const fontpick = document.getElementById('fontpick');
+fontpick.addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  merki.font = btn.dataset.f;
+  [...fontpick.children].forEach(c => c.classList.toggle('on', c === btn));
+  drawMerki();
+});
+/* the enquiry carries whatever they configured, so it lands as a real brief */
+const merkimail = document.getElementById('merkimail');
+function updateMerkiMail(){
+  const b = BEERS[merki.beer];
+  const body = `Halló,\n\nMig langar að fá tilboð í sérmerktan Kalda.\n\n`
+    + `Tilefni: ${merki.text || '(vantar)'}\n`
+    + `Undirlína: ${merki.sub || '(engin)'}\n`
+    + `Umbúðir: ${b.vessel === 'bottle' ? 'flöskur' : 'dósir'}\n`
+    + `Grunnur: ${b.name} ${b.abv}\n\nTakk fyrir.`;
+  merkimail.href = 'mailto:joi@bruggsmidjan.is?subject='
+    + encodeURIComponent('Sérmerktur Kaldi') + '&body=' + encodeURIComponent(body);
+}
+updateMerkiMail();
+
+let deb;
+const onField = () => {
+  clearTimeout(deb);
+  deb = setTimeout(() => {
+    merki.text = document.getElementById('evt').value.trim();
+    merki.sub  = document.getElementById('evt2').value.trim();
+    drawMerki(); updateMerkiMail();
+  }, 90);
+};
+document.getElementById('evt').addEventListener('input', onField);
+document.getElementById('evt2').addEventListener('input', onField);
+/* if Alpino lands after the first draw the canvas keeps the fallback font forever */
+document.fonts.ready.then(drawMerki);
+drawMerki();
+function sizeMerki(){
+  const r = hold.getBoundingClientRect();
+  if (r.width < 10) return;
+  r2.setSize(r.width, r.height); cam2.aspect = r.width/r.height; cam2.updateProjectionMatrix();
+}
+sizeMerki(); addEventListener('resize', sizeMerki);
+/* This asked "am I on screen?" with getBoundingClientRect on every single frame, which
+   forces layout every frame for a section that is off screen for most of the page. The
+   profile showed it as the largest real main-thread cost of the scroll. An observer
+   answers the same question for free, and the can now costs literally nothing until it
+   is actually in view. */
+let merkiVis = false;
+new IntersectionObserver(es => { merkiVis = es[0].isIntersecting; },
+  {rootMargin: '10% 0px'}).observe(hold);
+gsap.ticker.add(() => {
+  if (!merkiVis) return;
+  const t = (performance.now()-t0)/1000;
+  const v = can2.visible ? can2 : bottle2;
+  v.rotation.y = Math.sin(t*.38)*.2;
+  v.rotation.x = Math.sin(t*.27)*.04;
+  r2.render(scene2, cam2);
+});
+
+/* late layout (lazy images, fonts) shifts every trigger's start; refresh once settled */
+addEventListener('load', () => ScrollTrigger.refresh());
+/* the wordmark's letter boxes are only final once Khand has actually loaded */
+document.fonts.ready.then(measureWordmark);
+measureWordmark();
+
+window.__kld = { data, BEERS, lenis, scene, camera, renderer, composer, cans, mirrors, aos,
+  ground, glow, materials:{metal, seamM, baseM} };
+} /* end !reduce */
+</script>
+</body>
+</html>
