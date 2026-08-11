@@ -116,7 +116,42 @@ nav .links a{display:flex;align-items:center;min-height:44px;white-space:nowrap;
 nav .links a:hover,nav .links a:focus-visible{opacity:1}
 nav .links a.cta{border:1px solid rgba(237,242,244,.4);border-radius:999px;padding:9px 18px;opacity:1}
 nav .links a.cta:hover{border-color:var(--gull);color:var(--gull)}
-@media(max-width:760px){nav .links a:not(.cta){display:none}}
+/* ---------- mobile menu ---------- */
+/* both bars share one absolute anchor, so the open state is a pure rotation and the
+   two strokes are guaranteed to cross at the same point (offsetting them in the
+   transform instead produced a chevron, not an X) */
+.burger{display:none;position:relative;width:46px;height:46px;border:0;background:none;
+  cursor:pointer;padding:0;touch-action:manipulation}
+.burger span{position:absolute;left:11px;top:22px;width:24px;height:2px;
+  background:var(--lakk);border-radius:2px;
+  transition:transform .38s var(--ease)}
+.burger span:first-child{transform:translateY(-4px)}
+.burger span:last-child{transform:translateY(4px)}
+.burger[aria-expanded="true"] span:first-child{transform:rotate(45deg)}
+.burger[aria-expanded="true"] span:last-child{transform:rotate(-45deg)}
+.mobmenu{position:fixed;inset:0;z-index:39;background:rgba(10,14,20,.97);
+  display:grid;align-content:center;gap:2px;padding:14vh 28px 8vh;
+  overscroll-behavior:contain;opacity:0;transition:opacity .3s var(--ease)}
+.mobmenu.open{opacity:1}
+.mobmenu nav{position:static;display:grid;padding:0;gap:2px}
+.mobmenu a{font-family:var(--disp);font-weight:700;font-size:clamp(1.9rem,8vw,2.6rem);
+  text-transform:uppercase;letter-spacing:.01em;color:var(--lakk);text-decoration:none;
+  padding:11px 0;min-height:44px;opacity:0;transform:translateY(18px)}
+.mobmenu.open a{opacity:1;transform:none;
+  transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.mobmenu a.cta{color:var(--gull)}
+.mobmenu .mfoot{margin-top:34px;display:grid;gap:8px}
+.mobmenu .mfoot a{font-family:var(--body);font-weight:500;font-size:15px;
+  text-transform:none;color:#93A2AE;padding:8px 0}
+@media(prefers-reduced-motion:reduce){
+  .mobmenu,.mobmenu a{transition:none}
+  .mobmenu a{opacity:1;transform:none}
+}
+@media(max-width:760px){
+  nav .links{display:none}
+  .burger{display:block}
+  nav .mark img{height:44px}
+}
 
 /* ---------- fixed 3D stage (opaque: aluminium can never read transparent) ---------- */
 #stage{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0}
@@ -216,20 +251,38 @@ figure figcaption{margin-top:12px;font-size:14px;color:#93A2AE}
 .lead{margin-top:16px;color:#B6C2CC;max-width:52ch}
 /* the two Christmas beers stand LARGE on a shared jólarauður glow pool, the same
    device as the 3D stage's ink pool — products standing in the night, never cards */
-#arstid .duo{position:relative;display:flex;justify-content:center;align-items:flex-end;
-  gap:clamp(40px,9vw,140px);margin-top:60px;padding-bottom:44px}
+/* two columns on desktop: the story holds the left, the pair stands on the right,
+   so the section reads as one composition instead of a heading above a void */
+#arstid .wrapc{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+  gap:clamp(30px,6vw,80px);align-items:center}
+#arstid h2{grid-column:1;margin-bottom:0}
+#arstid .lead{grid-column:1;grid-row:2;margin-top:18px;align-self:start}
+#arstid .duo{grid-column:2;grid-row:1 / span 2;
+  position:relative;display:flex;justify-content:center;align-items:flex-end;
+  gap:clamp(30px,5vw,80px);padding-bottom:34px}
+@media(max-width:820px){
+  #arstid .wrapc{grid-template-columns:1fr}
+  #arstid h2,#arstid .lead,#arstid .duo{grid-column:1;grid-row:auto}
+  #arstid .duo{margin-top:44px}
+}
 #arstid .duo::before{content:'';position:absolute;left:50%;bottom:0;
-  transform:translateX(-50%);width:min(780px,88%);height:180px;
+  transform:translateX(-50%);width:min(560px,92%);height:170px;
   background:radial-gradient(50% 92% at 50% 100%, rgba(192,57,43,.34),
     rgba(192,57,43,.10) 55%, transparent 76%);
   filter:blur(2px);pointer-events:none}
-#arstid .jbeer{position:relative;text-align:center;margin:0;
-  transition:transform .5s var(--ease)}
-#arstid .jbeer:hover{transform:translateY(-10px)}
+/* NEVER transform the element that owns the :hover — it slides out from under the
+   cursor, which un-hovers it, which slides it back: a flicker loop. The hit box stays
+   put and the picture inside it moves. */
+#arstid .jbeer{position:relative;text-align:center;margin:0}
 #arstid .jbeer img{height:clamp(260px,42vh,440px);width:auto;
-  filter:drop-shadow(0 26px 34px rgba(0,0,0,.6))}
+  filter:drop-shadow(0 26px 34px rgba(0,0,0,.6));
+  transition:transform .5s var(--ease)}
 #arstid .jbeer:first-child img{transform:rotate(-2.4deg)}
 #arstid .jbeer:last-child img{transform:rotate(2.4deg)}
+@media (hover:hover){
+  #arstid .jbeer:first-child:hover img{transform:rotate(-2.4deg) scale(1.045)}
+  #arstid .jbeer:last-child:hover img{transform:rotate(2.4deg) scale(1.045)}
+}
 #arstid .jbeer figcaption{margin-top:20px;display:grid;gap:5px}
 #arstid .jbeer b{font-family:var(--disp);font-weight:700;font-size:1.2rem;
   letter-spacing:.03em;text-transform:uppercase}
@@ -288,12 +341,19 @@ figure figcaption{margin-top:12px;font-size:14px;color:#93A2AE}
 #frettir a.item{display:grid;grid-template-columns:auto 1fr auto;gap:clamp(16px,3vw,44px);
   align-items:baseline;padding:26px 4px;border-bottom:1px solid rgba(237,242,244,.12);
   text-decoration:none;color:inherit;transition:color .3s var(--ease),padding-left .4s var(--ease)}
-#frettir a.item:hover,#frettir a.item:focus-visible{color:var(--gull);padding-left:18px}
+#frettir a.item > *{transition:transform .4s var(--ease)}
+#frettir a.item:focus-visible{color:var(--gull)}
+#frettir a.item:focus-visible > *{transform:translateX(14px)}
+@media (hover:hover){
+  #frettir a.item:hover{color:var(--gull)}
+  #frettir a.item:hover > *{transform:translateX(14px)}
+}
 #frettir .when{font-size:13px;color:#7C7060;font-variant-numeric:tabular-nums;white-space:nowrap}
 #frettir .what{font-family:var(--disp);font-weight:600;text-transform:uppercase;
   letter-spacing:.02em;font-size:clamp(1.25rem,2.6vw,2rem);line-height:1.05}
 #frettir .go{font-size:13px;color:#7C7060;white-space:nowrap}
-#frettir a.item:hover .go,#frettir a.item:focus-visible .go{color:var(--gull)}
+#frettir a.item:focus-visible .go{color:var(--gull)}
+@media (hover:hover){#frettir a.item:hover .go{color:var(--gull)}}
 /* parked off-screen: cx/cy start at 0, and Chrome fires pointerenter when content
    scrolls under a stationary cursor, which flashed this panel in the top-left corner */
 #frettir .peek{position:fixed;top:0;left:0;width:210px;height:250px;pointer-events:none;
@@ -335,9 +395,13 @@ figure figcaption{margin-top:12px;font-size:14px;color:#93A2AE}
 /* the year-round eight in one calm band; the seasonal five live in the fan above */
 #urval .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin-top:44px}
 #urval .cell{background:#10141B;border:1px solid rgba(237,242,244,.06);border-radius:12px;
-  padding:16px 10px 13px;text-align:center;transition:transform .35s var(--ease),border-color .35s}
-#urval .cell:hover{transform:translateY(-5px);border-color:rgba(237,242,244,.22)}
-#urval .cell img{height:118px;object-fit:contain;margin:0 auto 10px}
+  padding:16px 10px 13px;text-align:center;transition:border-color .35s}
+#urval .cell img{height:118px;object-fit:contain;margin:0 auto 10px;
+  transition:transform .35s var(--ease)}
+@media (hover:hover){
+  #urval .cell:hover{border-color:rgba(237,242,244,.22)}
+  #urval .cell:hover img{transform:scale(1.07)}
+}
 #urval .cell .n{font-weight:700;font-size:13px;line-height:1.25}
 #urval .cell .a{font-size:12px;color:var(--al);margin-top:2px}
 
@@ -349,7 +413,6 @@ figure figcaption{margin-top:12px;font-size:14px;color:#93A2AE}
 #merki .crow{display:flex;gap:clamp(14px,2.6vw,40px);align-items:end;margin-top:20px;flex-wrap:wrap}
 #merki .crow img{height:clamp(120px,15vh,168px);width:auto;object-fit:contain;
   filter:drop-shadow(0 18px 30px rgba(0,0,0,.5));transition:transform .4s var(--ease)}
-#merki .crow img:hover{transform:translateY(-8px)}
 #merki .play{display:grid;grid-template-columns:minmax(300px,1fr) minmax(280px,460px);
   gap:clamp(28px,5vw,70px);align-items:center;margin-top:24px}
 #merki .canhold{position:relative;height:min(64vh,600px)}
@@ -368,7 +431,7 @@ figure figcaption{margin-top:12px;font-size:14px;color:#93A2AE}
 #merki .swatches button{width:44px;height:44px;border-radius:50%;border:5px solid transparent;
   padding:0;cursor:pointer;transition:transform .2s var(--ease),border-color .2s;
   background-clip:content-box;outline-offset:2px}
-#merki .swatches button:hover{transform:scale(1.12)}
+@media (hover:hover){#merki .swatches button:hover{transform:scale(1.12)}}
 #merki .swatches button[aria-pressed="true"]{border-color:var(--lakk);border-width:3px;transform:scale(1.1)}
 #merki .segs{display:flex;gap:8px}
 #merki .segs button{border:1px solid rgba(237,242,244,.22);background:transparent;color:#C9D4DC;
@@ -480,7 +543,25 @@ footer .fbase{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap
     <a href="#frettir">Frá býli</a>
     <a class="cta" href="#tur">Bóka kynningu</a>
   </div>
+  <button id="burger" class="burger" aria-label="Opna valmynd"
+          aria-expanded="false" aria-controls="mobmenu"><span></span><span></span></button>
 </nav>
+
+<div id="mobmenu" class="mobmenu" hidden>
+  <nav aria-label="Valmynd">
+    <a href="#gamme">Bjórinn</a>
+    <a href="#vatn">Vatnið</a>
+    <a href="#hus">Bruggsmiðjan</a>
+    <a href="#merki">Sérmerking</a>
+    <a href="#salur">Bjórböðin</a>
+    <a href="#frettir">Frá býli</a>
+    <a class="cta" href="#tur">Bóka kynningu</a>
+  </nav>
+  <div class="mfoot">
+    <a href="mailto:bruggsmidjan@bruggsmidjan.is">bruggsmidjan@bruggsmidjan.is</a>
+    <a href="tel:+3544662505">466 2505</a>
+  </div>
+</div>
 
 <div id="stage" aria-hidden="true"></div>
 
@@ -771,8 +852,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { BARREL, TOP, BASE, SEAM } from './proto/can-profile.js';
-import { GLASS, BOTTLE_BASE, CAP, BOTTLE_H, LABEL_LO, LABEL_HI, NECK_LO, NECK_HI }
-  from './proto/bottle-profile.js';
+import { GLASS, BOTTLE_BASE, CAP, BOTTLE_H, LABEL_LO, LABEL_HI, NECK_LO, NECK_HI,
+         CAP_FLUTES, CAP_FLUTE_LO, CAP_FLUTE_HI } from './proto/bottle-profile.js';
 
 /* All facts, ABVs and descriptions from bruggsmidjan.is/bjorarnir, read 2026-08-11.
    IPA's 6,0% is read off the label itself; Neipa's ABV is not published anywhere we
@@ -820,6 +901,36 @@ const NEWS = [
 /* the module is running: the page may keep its reveals */
 clearTimeout(window.__kldBoot);
 
+/* ---------- mobile menu ----------
+   Plain DOM + CSS, set up before anything 3D, so navigation still works on a phone
+   even if WebGL or the scene never comes up. */
+{
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('mobmenu');
+  const links = [...menu.querySelectorAll('a')];
+  let open = false;
+  const setOpen = v => {
+    open = v;
+    burger.setAttribute('aria-expanded', String(v));
+    burger.setAttribute('aria-label', v ? 'Loka valmynd' : 'Opna valmynd');
+    document.body.style.overflow = v ? 'hidden' : '';
+    if (v){
+      menu.hidden = false;
+      requestAnimationFrame(() => {
+        menu.classList.add('open');
+        links.forEach((a, i) => a.style.transitionDelay = (60 + i * 45) + 'ms');
+      });
+    } else {
+      menu.classList.remove('open');
+      links.forEach(a => a.style.transitionDelay = '');
+      setTimeout(() => { if (!open) menu.hidden = true; }, 320);
+    }
+  };
+  burger.addEventListener('click', () => setOpen(!open));
+  links.forEach(a => a.addEventListener('click', () => setOpen(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && open) setOpen(false); });
+}
+
 const hasGL = (() => { try { const c = document.createElement('canvas');
   return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch(e){ return false; } })();
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || !hasGL;
@@ -841,7 +952,7 @@ document.getElementById('gno').onclick = () => {
 };
 
 /* grids: their real product photography, bottles and cans alike */
-const pimg = b => b.slug === 'neipa' ? 'img/kaldi/products/neipa.jpg' : `img/kaldi/products/${b.slug}.png`;
+const pimg = b => `img/kaldi/products/${b.slug}.png`;
 const cell = b => `<div class="cell"><img loading="lazy" src="${pimg(b)}"
    alt="${b.name} í 330 ml ${b.vessel === 'can' ? 'dós' : 'flösku'}"><div class="n">${b.name}</div><div class="a">${b.abv}</div></div>`;
 document.getElementById('ugrid').innerHTML = [...BEERS, ...SEASON.map(s => ({...s, vessel:'bottle'}))].map(cell).join('');
@@ -958,16 +1069,21 @@ function hdrStudioEnv(r){
   const W = 512, H = 256, d = new Float32Array(W*H*4);
   for (let y = 0; y < H; y++){
     const v = y/(H-1);
-    const amb = v < .5 ? .012 + (.5-v)*.02 : .004;     /* black room, almost no ambient */
+    const amb = (v < .5 ? .012 + (.5-v)*.02 : .004)
+              + .030 * Math.exp(-Math.pow((v - .5) / .05, 2));  /* wall/floor seam */
     for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=amb; d[i+3]=1; }
   }
+  /* gaussian, not a box: a lamp with a finite footprint mirrors as a visible
+     rectangle on anything smooth. Sigmas are the old half-widths / 1.7 so the cans
+     keep the light they were tuned under. */
   const softbox = (cu, cv, hu, hv, val) => {
+    const su = hu / 1.7, sv = hv / 1.7;
     for (let y = 0; y < H; y++){
-      const dv = Math.abs(y/(H-1) - cv)/hv; if (dv > 1) continue;
+      const dv = (y/(H-1) - cv) / sv; if (Math.abs(dv) > 4) continue;
       for (let x = 0; x < W; x++){
-        let du = Math.abs(x/(W-1) - cu); if (du > .5) du = 1 - du; du /= hu;
-        if (du > 1) continue;
-        const f = (1 - du*du) * (1 - dv*dv), a = val*f*f;
+        let du = Math.abs(x/(W-1) - cu); if (du > .5) du = 1 - du; du /= su;
+        if (du > 4) continue;
+        const a = val * Math.exp(-(du*du + dv*dv));
         const i = (y*W+x)*4; d[i] += a; d[i+1] += a; d[i+2] += a;
       }
     }
@@ -994,27 +1110,40 @@ scene.environment = hdrStudioEnv(renderer);
    env untouched. */
 function hdrGlassEnv(r){
   const W = 512, H = 256, d = new Float32Array(W*H*4);
+  /* A room, not a black void: a dim gradient sky, a brighter spill where the wall
+     meets the floor, and a dark floor under it. Glass reflects that horizon as a soft
+     line across the belly, which is most of what separates a photographed bottle from
+     a CG one. */
   for (let y = 0; y < H; y++){
     const v = y/(H-1);
-    const amb = v < .5 ? .010 + (.5-v)*.016 : .004;
-    for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=amb; d[i+3]=1; }
+    const sky   = .014 * (1 - v * .55);
+    const floor = .006 * (1 - (v - .5) * .9);
+    const seam  = .040 * Math.exp(-Math.pow((v - .5) / .045, 2));
+    const base  = (v < .5 ? sky : floor) + seam;
+    for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=base; d[i+3]=1; }
   }
-  const softbox = (cu, cv, hu, hv, val) => {
+  /* GAUSSIAN strip lights. The old boxes had a finite footprint with a visible
+     boundary, so a smooth bottle mirrored a literal white rectangle that swept across
+     it as it turned. A gaussian never ends: there is no edge to see, only a core that
+     falls away, which is what a softbox with a diffusion sock actually looks like. */
+  const strip = (cu, cv, su, sv, val) => {
     for (let y = 0; y < H; y++){
-      const dv = Math.abs(y/(H-1) - cv)/hv; if (dv > 1) continue;
+      const dv = (y/(H-1) - cv) / sv;
+      if (Math.abs(dv) > 4) continue;
       for (let x = 0; x < W; x++){
-        let du = Math.abs(x/(W-1) - cu); if (du > .5) du = 1 - du; du /= hu;
-        if (du > 1) continue;
-        const f = (1 - du*du) * (1 - dv*dv), a = val*f*f;
+        let du = Math.abs(x/(W-1) - cu); if (du > .5) du = 1 - du; du /= su;
+        if (du > 4) continue;
+        const a = val * Math.exp(-(du*du + dv*dv));
         const i = (y*W+x)*4; d[i] += a; d[i+1] += a; d[i+2] += a;
       }
     }
   };
-  softbox(.14, .30, .028, .40, 26);
-  softbox(.40, .32, .012, .34,  7);
-  softbox(.63, .34, .014, .34,  6);
-  softbox(.87, .30, .020, .26,  8);
-  softbox(.30, .04, .34, .12,  2.5);
+  strip(.14, .34, .016, .175, 26);   /* key: tall soft strip, front-left */
+  strip(.24, .32, .006, .150,  9);   /* its narrow hot core: the crisp inner line */
+  strip(.41, .33, .007, .140,  7);   /* second body streak */
+  strip(.62, .35, .009, .150,  6);   /* right glint */
+  strip(.87, .31, .014, .120,  7);   /* rear kicker, lifts the far limb off black */
+  strip(.30, .06, .30,  .060,  2.2); /* overhead bounce */
   const t = new THREE.DataTexture(d, W, H, THREE.RGBAFormat, THREE.FloatType);
   t.mapping = THREE.EquirectangularReflectionMapping; t.needsUpdate = true;
   const pg = new THREE.PMREMGenerator(r);
@@ -1115,12 +1244,12 @@ const glassGradient = () => {
   const g = x.createLinearGradient(0, 256, 0, 0);
   /* v runs by lathe point index, monotonic in height; soft ramps only. The step at
      the fill line is deliberately gradual — the photo's is too. */
-  g.addColorStop(0.00, '#200e06');
-  g.addColorStop(0.45, '#2a1608');
-  g.addColorStop(0.66, '#341c0c');
-  g.addColorStop(0.82, '#3c220e');
-  g.addColorStop(0.95, '#44260f');
-  g.addColorStop(1.00, '#30180a');
+  g.addColorStop(0.00, '#2a1409');
+  g.addColorStop(0.45, '#3a1e0c');
+  g.addColorStop(0.66, '#48280f');
+  g.addColorStop(0.82, '#563012');
+  g.addColorStop(0.95, '#5e3514');
+  g.addColorStop(1.00, '#40200d');
   x.fillStyle = g; x.fillRect(0, 0, 4, 256);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 };
@@ -1183,8 +1312,38 @@ const glassFresnel = sh => {
      }`);
 };
 const gGlass = new THREE.LatheGeometry(GLASS, segs),
-      gGBase = new THREE.LatheGeometry(BOTTLE_BASE, segs),
-      gCap   = new THREE.LatheGeometry(CAP, segs);
+      gGBase = new THREE.LatheGeometry(BOTTLE_BASE, segs);
+/* A crown cap is the one part of this bottle a lathe cannot describe: its skirt is
+   crimped into 21 lobes that bulge outward AND hang lower than the slots between
+   them, which is exactly what the eye reads as "bottle cap". So the lathe is built
+   dense and then displaced per-vertex, and the normals are recomputed so the lobes
+   catch the strip lights individually. */
+const gCap = (() => {
+  const g = new THREE.LatheGeometry(CAP, CAP_FLUTES * 8);   // 8 samples per flute
+  const pos = g.attributes.position;
+  const v = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++){
+    v.fromBufferAttribute(pos, i);
+    const r = Math.hypot(v.x, v.z);
+    if (r < 1e-5) continue;
+    const th = Math.atan2(v.z, v.x);
+    const ymm = v.y * 100;
+    const t = Math.max(0, Math.min(1, (CAP_FLUTE_HI - ymm) / (CAP_FLUTE_HI - CAP_FLUTE_LO)));
+    if (t <= 0) continue;
+    /* wide lobes, narrow slots: flattening the cosine peaks matches the photo, where
+       the metal is mostly lobe and the gaps are thin dark slits */
+    let f = .5 + .5 * Math.cos(CAP_FLUTES * th);
+    f = Math.pow(f, .6);
+    const nr = r * (1 + .034 * t * (f - .45));
+    v.x = Math.cos(th) * nr; v.z = Math.sin(th) * nr;
+    /* the bottom edge is scalloped: lobes hang below the slots */
+    const vt = Math.max(0, Math.min(1, (222.2 - ymm) / 2.8));
+    v.y -= .009 * vt * f;
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  g.computeVertexNormals();
+  return g;
+})();
 const mm = v => v * .01;
 const LABEL_ARCS = {1:112, 2:112, 3:122, 4:118, 5:118, 8:114};
 /* The label's die-cut outline is a superellipse (a diamond for the IPA), so it is
@@ -1222,12 +1381,15 @@ function buildBottle(b){
     map: glassMap, color: 0xffffff, roughness: .06, metalness: 0,
     roughnessMap: glassNoise,
     clearcoat: 1, clearcoatRoughness: .09,
-    reflectivity: .8, ior: 1.5, envMapIntensity: 1.15, specularIntensity: 1});
+    reflectivity: .8, ior: 1.5, envMapIntensity: 1.42, specularIntensity: 1});
   glassM.envMap = glassEnv;
   glassM.onBeforeCompile = glassFresnel;
-  const capM = new THREE.MeshPhysicalMaterial({color: 0xB98F3E, metalness: .92,
-    roughness: .3, clearcoat: .6, clearcoatRoughness: .25,
-    metalnessMap: brushed, envMapIntensity: 1.15});
+  /* photo-matched: a crown cap is lacquered brass, brighter and yellower than the
+     aluminium of the cans, with a faint orange-peel from the lacquer */
+  const capM = new THREE.MeshPhysicalMaterial({color: 0xD8B25C, metalness: .95,
+    roughness: .24, roughnessMap: brushed,
+    clearcoat: .85, clearcoatRoughness: .16,
+    envMapIntensity: 1.5});
   capM.envMap = glassEnv;
   capM.onBeforeCompile = muteDirect;
   const bBaseM = new THREE.MeshPhysicalMaterial({color: 0x140a04, roughness: .3,
@@ -2050,9 +2212,9 @@ const bottle2 = new THREE.Group();
               new THREE.Mesh(gGBase, new THREE.MeshPhysicalMaterial({color: 0x140a04,
                 roughness: .3, metalness: 0, clearcoat: .7, envMapIntensity: .5,
                 side: THREE.DoubleSide})),
-              new THREE.Mesh(gCap, new THREE.MeshPhysicalMaterial({color: 0xB98F3E,
-                metalness: .92, roughness: .3, clearcoat: .6, clearcoatRoughness: .25,
-                metalnessMap: brushed, envMapIntensity: 1.3})));
+              new THREE.Mesh(gCap, new THREE.MeshPhysicalMaterial({color: 0xD8B25C,
+                metalness: .95, roughness: .24, roughnessMap: brushed,
+                clearcoat: .85, clearcoatRoughness: .16, envMapIntensity: 1.5})));
   const lg = new THREE.CylinderGeometry(mm(30.55), mm(30.55), blh, 96, 1, true, -bArc/2, bArc);
   const lm2 = new THREE.MeshStandardMaterial({color: 0xd8d6d2, roughness: .58,
     metalness: 0, envMapIntensity: .38, transparent: true,

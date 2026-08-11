@@ -34,13 +34,30 @@ export const BOTTLE_BASE = vec([
   [0.0, 6.0], [6.0, 5.2], [10.0, 3.6], [13.0, 1.8], [15.0, 0.0],
 ]);
 
-// Gold crown cap: a real crown is ~11mm tall — the silhouette measurement read 20mm
-// because specular halo at the top aliased into the alpha. Authored at true cap
-// proportions instead; smooth silhouette, the 21 crimp flutes are left to the metal.
+// Gold crown cap. A crown's silhouette is NOT a smooth cone: a flat top disc
+// overhangs a skirt of 21 scalloped lobes that bulge outward and hang lower than the
+// slots between them. The profile below carries the disc and the rim roll; the flutes
+// themselves are applied as a radial + vertical displacement in crownCapGeometry(),
+// because a lathe is rotationally symmetric by definition.
 export const CAP = vec([
-  [15.0, 219.5], [15.2, 221.5], [15.2, 227.0], [14.8, 229.3], [13.6, 230.6],
-  [11.0, 231.3], [6.0, 231.6], [0.0, 231.6],
+  [14.95, 219.4],   // skirt bottom edge (scalloped by the displacement)
+  [15.05, 220.6],
+  [15.10, 222.5],
+  [15.15, 224.5],
+  [15.20, 226.2],   // top of the flute zone
+  [15.35, 227.4],   // the disc overhangs the skirt
+  [15.40, 228.4],   // flat rim band: the crisp horizontal highlight in the photo
+  [15.20, 229.4],   // rim rolls over
+  [14.60, 230.2],
+  [12.80, 230.9],
+  [ 9.00, 231.3],
+  [ 4.50, 231.5],
+  [ 0.00, 231.6],
 ]);
+
+export const CAP_FLUTES = 21;          // the real count on a crown cap
+export const CAP_FLUTE_LO = 219.4;     // mm: flutes are full strength here
+export const CAP_FLUTE_HI = 227.2;     // mm: and gone by here
 
 // Where things live on the glass (mm from bottle bottom):
 export const BODY_R = 30.0;          // body radius
