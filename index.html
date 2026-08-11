@@ -47,6 +47,19 @@
   ]
 }
 </script>
+<script>
+/* BOOT GUARD. Every reveal on this page is an enhancement: the markup is readable
+   with no JS at all. This opts into the hidden-then-revealed state, and un-opts if
+   the module never boots — a CDN blip, a blocked script, a throw before setup — so
+   content can never be stranded invisible and the age gate can never trap the page.
+   The module clears the timer as soon as it is running. */
+document.documentElement.classList.add('anim');
+window.__kldBoot = setTimeout(function(){
+  var r = document.documentElement;
+  r.classList.remove('anim');
+  r.classList.add('no3d', 'nojs');
+}, 5000);
+</script>
 <style>
 @font-face{font-family:'Alpino';src:url('fonts/Alpino-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Alpino';src:url('fonts/Alpino-Black.woff2') format('woff2');font-weight:900;font-display:swap}
@@ -403,10 +416,11 @@ footer .fline{height:1px;background:rgba(237,242,244,.09);margin:56px 0 26px}
 footer .fbase{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#7C7060;font-size:13px}
 @media(max-width:860px){footer .ftop{grid-template-columns:1fr}footer .fcols{grid-template-columns:1fr 1fr}}
 
-.rv{opacity:0;transform:translateY(26px)}
+:root.anim .rv{opacity:0;transform:translateY(26px)}
 .mask-h .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
-.mask-h .w>span{display:inline-block;transform:translateY(114%)}
-#rok .lede .wd{opacity:.14}
+.mask-h .w>span{display:inline-block}
+:root.anim .mask-h .w>span{transform:translateY(114%)}
+:root.anim #rok .lede .wd{opacity:.14}
 #rok .lede .wd.gold{color:var(--gull)}
 @media (prefers-reduced-motion: reduce){
   .rv,#rok .lede .wd{opacity:1 !important;transform:none !important}
@@ -425,6 +439,8 @@ footer .fbase{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap
 /* same static path for browsers without WebGL (class set by JS) */
 :root.no3d .rv,:root.no3d #rok .lede .wd{opacity:1 !important;transform:none !important}
 :root.no3d #stage{display:none !important}
+/* a gate that cannot be answered must not hold the page hostage */
+:root.nojs #gate{display:none !important}
 :root.no3d #gamme{height:auto}
 :root.no3d #gamme .hold{position:static;height:auto;padding:18vh 0 6vh}
 :root.no3d #gamme h1 .w>span{transform:none}
@@ -801,6 +817,9 @@ const NEWS = [
 
 /* no WebGL (old device, exhausted contexts, headless bot) must never mean a broken
    page: those visitors get the same fully readable static path as reduced-motion */
+/* the module is running: the page may keep its reveals */
+clearTimeout(window.__kldBoot);
+
 const hasGL = (() => { try { const c = document.createElement('canvas');
   return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch(e){ return false; } })();
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches || !hasGL;
@@ -867,6 +886,11 @@ if (reduce) {
     <article class="bp static"><h2>${b.name}</h2>
       <div class="row"><span class="abv">${b.abv}</span><p>${b.desc}</p></div></article>`).join('');
 } else {
+/* Anything below can throw — a bad texture, a driver quirk, a three.js version
+   change. If it does, the page must not be left with its reveals uncreated and its
+   content stranded at opacity 0, so a failure drops straight onto the same readable
+   static path that no-WebGL visitors get. */
+try {
 
 gsap.registerPlugin(ScrollTrigger);
 const lenis = new Lenis({lerp:.1});
@@ -1163,6 +1187,33 @@ const gGlass = new THREE.LatheGeometry(GLASS, segs),
       gCap   = new THREE.LatheGeometry(CAP, segs);
 const mm = v => v * .01;
 const LABEL_ARCS = {1:112, 2:112, 3:122, 4:118, 5:118, 8:114};
+/* The label's die-cut outline is a superellipse (a diamond for the IPA), so it is
+   cheaper to rebuild here than to ship an alpha channel: the six labels drop from
+   17.9MB of RGBA PNG to 1.2MB of JPEG. Exponents match the extraction script. */
+const LABEL_SHAPE = {1:2.6, 2:2.6, 3:3.4, 4:'diamond', 5:2.6, 8:2.8};
+const dieCutCache = new Map();
+function dieCut(shape){
+  if (dieCutCache.has(shape)) return dieCutCache.get(shape);
+  const W = 512, H = 320;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), img = x.createImageData(W, H);
+  for (let y = 0; y < H; y++){
+    const ny = (y / H) * 2 - 1;
+    for (let px = 0; px < W; px++){
+      const nx = (px / W) * 2 - 1;
+      const d = shape === 'diamond'
+        ? Math.abs(nx) + Math.abs(ny)
+        : Math.pow(Math.abs(nx), shape) + Math.pow(Math.abs(ny), shape);
+      const a = Math.max(0, Math.min(1, (1 - d) * 9)) * 255;
+      const i = (y * W + px) * 4;
+      img.data[i] = img.data[i+1] = img.data[i+2] = a; img.data[i+3] = 255;
+    }
+  }
+  x.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  dieCutCache.set(shape, t);
+  return t;
+}
 
 function buildBottle(b){
   /* PER-VESSEL material instances, the transparent-aluminium law: the rAF writes
@@ -1193,11 +1244,12 @@ function buildBottle(b){
   const arc = THREE.MathUtils.degToRad(LABEL_ARCS[b.asset] || 112);
   const lh = mm(LABEL_HI - LABEL_LO);
   const lgeo = new THREE.CylinderGeometry(mm(30.12), mm(30.12), lh, 96, 1, true, -arc/2, arc);
-  const ltex = loader.load(`bottles/${b.asset}_label.png`);
+  const ltex = loader.load(`bottles/${b.asset}_label.jpg`);
   ltex.colorSpace = THREE.SRGBColorSpace;
   ltex.anisotropy = renderer.capabilities.getMaxAnisotropy();
   const labelM = new THREE.MeshStandardMaterial({map: ltex, color: 0xF2EFE9,
-    roughness: .5, metalness: 0, envMapIntensity: 1.15, transparent: true});
+    roughness: .5, metalness: 0, envMapIntensity: 1.15, transparent: true,
+    alphaMap: dieCut(LABEL_SHAPE[b.asset] ?? 2.6)});
   labelM.envMap = glassEnv;
   labelM.onBeforeCompile = muteDirect;
   const label = new THREE.Mesh(lgeo, labelM);
@@ -1210,7 +1262,7 @@ function buildBottle(b){
   const NB = [[17.55,162],[17.5,165],[17.1,170],[16.6,176],[16.0,182]]
     .map(([r,y]) => new THREE.Vector2(mm(r), mm(y)));
   const ngeo = new THREE.LatheGeometry(NB, 96);
-  const ntex = loader.load(`bottles/${b.asset}_neck.png`);
+  const ntex = loader.load(`bottles/${b.asset}_neck.jpg`);
   ntex.colorSpace = THREE.SRGBColorSpace; ntex.wrapS = THREE.RepeatWrapping;
   const neckM = new THREE.MeshPhysicalMaterial({
     map: ntex, color: 0xffffff, roughness: .38, metalness: .2,
@@ -1638,13 +1690,26 @@ addEventListener('pointermove', e => {
 
 /* ---------- rAF: apply data to the scene (carousel lerp = ciao's delta*10) ---------- */
 let t0 = performance.now(), last = t0;
+let lastSY = scrollY, scrollEnergy = 0;
 gsap.ticker.add(() => {
   const now = performance.now(), dt = Math.min(.05, (now-last)/1000); last = now;
   const t = (now-t0)/1000;
   data.focus += (data.focusTarget - data.focus) * Math.min(1, dt*10);
 
-  /* half the old sway: the env highlights were sweeping fast enough to strobe */
-  const idle = Math.sin(t*.44)*.11 + Math.sin(t*.17)*.032;
+  /* MEASURED (qa/flickerprobe.mjs): a continuously rotating vessel under sharp
+     strip-light specular shimmers across 8.69% of the frame every 90ms; parked, the
+     same scene moves 0.25% (drifting dust, nothing else). Ambient idle rotation WAS
+     the "glitter/rectangle flicker", not the lights.
+     So the sway now answers the scroll and decays to genuinely still: energy rises
+     with scroll movement and falls away when the user stops, which is both quieter
+     and better motivated than an infinite loop. */
+  const sy = scrollY;
+  const dv = Math.abs(sy - lastSY); lastSY = sy;
+  const want = Math.min(1, dv / 55);
+  /* attack fast, release slow: it wakes on the first wheel notch and settles gently */
+  scrollEnergy += (want - scrollEnergy) * Math.min(1, dt * (want > scrollEnergy ? 9 : 1.5));
+  if (scrollEnergy < .002) scrollEnergy = 0;          /* hard stop: exactly still */
+  const idle = (Math.sin(t*.44)*.11 + Math.sin(t*.17)*.032) * scrollEnergy;
   /* A scrub is a CATCH-UP, not a position: flick the wheel hard and the scroll races
      past while `exit` is still interpolating, which left the fixed stage painting cans
      over sections far below (the "picture following the page down"). The scrub still
@@ -1685,11 +1750,11 @@ gsap.ticker.add(() => {
     if (!can.visible) return;
     const swing = Math.sin(Math.min(1, Math.abs(rel)) * Math.PI) * .31 * Math.sign(rel||1);
     can.rotation.y = idle + rel * .13 * data.spread - swing * (1-data.spread);
-    can.rotation.x = Math.sin(t*.31)*.045;
-    can.rotation.z = Math.sin(t*.23 + i)*.019;
+    can.rotation.x = Math.sin(t*.31)*.045 * scrollEnergy;
+    can.rotation.z = Math.sin(t*.23 + i)*.019 * scrollEnergy;
     const s = data.scale * (1 - .1*Math.min(1,Math.abs(rel))*data.spread);
     can.scale.setScalar(s);
-    const bob = Math.sin(t*.55 + i*.9)*.012;
+    const bob = Math.sin(t*.55 + i*.9)*.012 * scrollEnergy;
     can.position.set(x, -.57 + yOff + bob, -Math.abs(rel)*.28*data.spread);
     /* traverse() walks the subtree and allocates a closure for every can, every frame.
        The hierarchy never changes after build, so the mesh list is cached on first use.
@@ -1699,7 +1764,11 @@ gsap.ticker.add(() => {
     const tr = vis < .999, cs = vis > .6;
     for (let k = 0; k < cm.length; k++){
       const m = cm[k].material;
-      m.opacity = vis; m.transparent = tr; cm[k].castShadow = cs;
+      /* ONE PROPERTY, ONE OWNER — with an exception this loop must respect: a
+         die-cut label carries its shape in an alphaMap, which three.js only honours
+         while the material is transparent. Forcing transparent=false at full opacity
+         silently discarded the cut and rendered the label as a full rectangle. */
+      m.opacity = vis; m.transparent = tr || !!m.alphaMap; cm[k].castShadow = cs;
     }
     /* exact mirror: reflect the whole world matrix, never the decomposed parts.
        updateMatrixWorld first or we reflect LAST frame's transform (a one-frame lag
@@ -1744,9 +1813,9 @@ gsap.ticker.add(() => {
     const dp = dust.geometry.attributes.position;
     for (let i = 0; i < DUST_N; i++){
       const b3 = i*3;
-      dp.array[b3]   = dustBase[b3]   + Math.sin(t*.13 + i*1.7) * .09;
-      dp.array[b3+1] = dustBase[b3+1] + Math.sin(t*.08 + i*2.1) * .06 + yOff * .25;
-      dp.array[b3+2] = dustBase[b3+2] + Math.cos(t*.11 + i*1.3) * .07;
+      dp.array[b3]   = dustBase[b3]   + Math.sin(t*.07 + i*1.7) * .05;
+      dp.array[b3+1] = dustBase[b3+1] + Math.sin(t*.045 + i*2.1) * .035 + yOff * .25;
+      dp.array[b3+2] = dustBase[b3+2] + Math.cos(t*.06 + i*1.3) * .04;
     }
     dp.needsUpdate = true;
     dust.material.opacity = .3 * vis0;
@@ -1986,7 +2055,8 @@ const bottle2 = new THREE.Group();
                 metalnessMap: brushed, envMapIntensity: 1.3})));
   const lg = new THREE.CylinderGeometry(mm(30.55), mm(30.55), blh, 96, 1, true, -bArc/2, bArc);
   const lm2 = new THREE.MeshStandardMaterial({color: 0xd8d6d2, roughness: .58,
-    metalness: 0, envMapIntensity: .38, transparent: true});
+    metalness: 0, envMapIntensity: .38, transparent: true,
+    alphaMap: dieCut(2.6)});
   const lb = new THREE.Mesh(lg, lm2);
   lb.position.y = mm(LABEL_LO) + blh/2;
   bottle2.add(lb);
@@ -2048,14 +2118,13 @@ function drawMerki(){
   const dispF = "'Alpino', sans-serif", bodyF = "'Switzer', sans-serif";
 
   if (isBottle){
-    const img = getWrap('b' + beer.asset, `bottles/${beer.asset}_label.png`);
+    const img = getWrap('b' + beer.asset, `bottles/${beer.asset}_label.jpg`);
     if (!img.complete || !img.naturalWidth) return;
     mbx.clearRect(0, 0, 1024, 640);
     mbx.drawImage(img, 0, 0, 1024, 640);
     if (merki.text || merki.sub){
       mbx.save();
       /* paint only where the die-cut label exists */
-      mbx.globalCompositeOperation = 'source-atop';
       /* the patch must swallow the WHOLE printed script block on the bottle label,
          descender flourishes included, or the leftovers read as garbage below the text */
       const grd = mbx.createLinearGradient(0, 175, 0, 500);
@@ -2224,6 +2293,15 @@ measureWordmark();
 
 window.__kld = { data, BEERS, lenis, scene, camera, renderer, composer, cans, mirrors, aos,
   ground, glow, materials:{metal, seamM, baseM} };
+window.__kldReady = true;
+
+} catch (err) {
+  console.error('[kaldi] 3D setup failed, falling back to the static path:', err);
+  const r = document.documentElement;
+  r.classList.remove('anim');       /* un-hide everything the reveals would have shown */
+  r.classList.add('no3d');
+  try { ScrollTrigger.getAll().forEach(t => t.kill()); } catch (e) {}
+}
 } /* end !reduce */
 </script>
 </body>
