@@ -985,9 +985,9 @@ function hdrGlassEnv(r){
       }
     }
   };
-  softbox(.14, .30, .020, .40, 30);
-  softbox(.40, .32, .008, .34,  8);
-  softbox(.63, .34, .010, .34,  7);
+  softbox(.14, .30, .028, .40, 26);
+  softbox(.40, .32, .012, .34,  7);
+  softbox(.63, .34, .014, .34,  6);
   softbox(.87, .30, .020, .26,  8);
   softbox(.30, .04, .34, .12,  2.5);
   const t = new THREE.DataTexture(d, W, H, THREE.RGBAFormat, THREE.FloatType);
@@ -1100,9 +1100,40 @@ const glassGradient = () => {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 };
 const glassMap = glassGradient();
+/* faint vertical irregularity, like the draw lines of real bottle glass — a perfectly
+   uniform surface is half of what reads as CG */
+const glassNoise = (() => {
+  const N = 256, c = document.createElement('canvas'); c.width = c.height = N;
+  const x = c.getContext('2d'), img = x.createImageData(N, N);
+  const col = new Float32Array(N);
+  for (let i = 0; i < N; i++) col[i] = Math.random();
+  for (let xx = 0; xx < N; xx++){
+    const v0 = (col[xx] + col[(xx+1)%N]*.6 + col[(xx+N-1)%N]*.6) / 2.2;
+    for (let y = 0; y < N; y++){
+      const w = Math.sin(y*.05 + xx*.3)*.5+.5;
+      const v = Math.max(0, Math.min(1, .55 + (v0-.5)*.5 + (w-.5)*.12));
+      const i = (y*N+xx)*4, b = v*255|0;
+      img.data[i]=img.data[i+1]=img.data[i+2]=b; img.data[i+3]=255;
+    }
+  }
+  x.putImageData(img,0,0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3,1);
+  return t;
+})();
 /* The photo's glass glows AMBER at grazing angles — light passing THROUGH the bottle,
    which opaque PBR cannot make. A small fresnel emissive fakes exactly that, scaled by
    the gradient so the liquid-dark body glows less than the headspace. */
+/* ONE light recipe for every part of the bottle: the spots stay muted so the whole
+   object lives in the strip-light env. A label at full spot power over env-only glass
+   is exactly the pasted-on-sticker look. */
+const muteDirect = sh => {
+  sh.fragmentShader = sh.fragmentShader.replace(
+    '#include <aomap_fragment>',
+    `#include <aomap_fragment>
+     reflectedLight.directDiffuse *= 0.15;
+     reflectedLight.directSpecular *= 0.22;`);
+};
 const glassFresnel = sh => {
   /* the key/under/rim spots are tuned for lacquered cans; on dark glass their direct
      diffuse floods it into milk chocolate and their specular paints the fat edge band.
@@ -1136,16 +1167,21 @@ function buildBottle(b){
   /* PER-VESSEL material instances, the transparent-aluminium law: the rAF writes
      material.opacity per item, so nothing here may share an instance. */
   const glassM = new THREE.MeshPhysicalMaterial({
-    map: glassMap, color: 0xffffff, roughness: .05, metalness: 0,
-    clearcoat: 1, clearcoatRoughness: .05,
-    reflectivity: .8, ior: 1.5, envMapIntensity: 1.3, specularIntensity: 1});
+    map: glassMap, color: 0xffffff, roughness: .06, metalness: 0,
+    roughnessMap: glassNoise,
+    clearcoat: 1, clearcoatRoughness: .09,
+    reflectivity: .8, ior: 1.5, envMapIntensity: 1.15, specularIntensity: 1});
   glassM.envMap = glassEnv;
   glassM.onBeforeCompile = glassFresnel;
   const capM = new THREE.MeshPhysicalMaterial({color: 0xB98F3E, metalness: .92,
     roughness: .3, clearcoat: .6, clearcoatRoughness: .25,
-    metalnessMap: brushed, envMapIntensity: 1.3});
+    metalnessMap: brushed, envMapIntensity: 1.15});
+  capM.envMap = glassEnv;
+  capM.onBeforeCompile = muteDirect;
   const bBaseM = new THREE.MeshPhysicalMaterial({color: 0x140a04, roughness: .3,
     metalness: 0, clearcoat: .7, envMapIntensity: .5, side: THREE.DoubleSide});
+  bBaseM.envMap = glassEnv;
+  bBaseM.onBeforeCompile = muteDirect;
 
   const vessel = new THREE.Group();
   vessel.scale.setScalar(TRUE_SCALE);
@@ -1159,8 +1195,10 @@ function buildBottle(b){
   const ltex = loader.load(`bottles/${b.asset}_label.png`);
   ltex.colorSpace = THREE.SRGBColorSpace;
   ltex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-  const labelM = new THREE.MeshStandardMaterial({map: ltex, color: 0xF4F2EE,
-    roughness: .5, metalness: 0, envMapIntensity: .5, transparent: true});
+  const labelM = new THREE.MeshStandardMaterial({map: ltex, color: 0xF2EFE9,
+    roughness: .5, metalness: 0, envMapIntensity: 1.15, transparent: true});
+  labelM.envMap = glassEnv;
+  labelM.onBeforeCompile = muteDirect;
   const label = new THREE.Mesh(lgeo, labelM);
   label.position.y = mm(LABEL_LO) + lh/2;
   vessel.add(label);
@@ -1174,9 +1212,10 @@ function buildBottle(b){
   const ntex = loader.load(`bottles/${b.asset}_neck.png`);
   ntex.colorSpace = THREE.SRGBColorSpace; ntex.wrapS = THREE.RepeatWrapping;
   const neckM = new THREE.MeshPhysicalMaterial({
-    map: ntex, color: 0xffffff, roughness: .32, metalness: .25,
-    clearcoat: .6, clearcoatRoughness: .2, envMapIntensity: .9});
+    map: ntex, color: 0xffffff, roughness: .38, metalness: .2,
+    clearcoat: .5, clearcoatRoughness: .28, envMapIntensity: .6});
   neckM.envMap = glassEnv;
+  neckM.onBeforeCompile = muteDirect;
   const neck = new THREE.Mesh(ngeo, neckM);
   neck.rotation.y = Math.PI;
   vessel.add(neck);
@@ -1316,43 +1355,84 @@ glow.rotation.x = -Math.PI/2; glow.position.y = GROUND_Y + .002; glow.renderOrde
    body evenly from three directions. Physically-correct decay 2 (intensities rescaled
    by distance squared) plus a dominant key restores the dark limb. */
 /* ---------- the horizon ----------
-   Kaldi's own world is a winter night in Eyjafjörður: their photography stands the
-   bottles in snow with the mountains behind. Here the room does the same in three
-   dimensions: the RIDDARINN from their own label art stands near, and the mountain
-   peaks from the Neipa art hold the far ridge. Additive against a near-black room
-   means only the light artwork registers and there is no rectangle edge to hide. */
-/* Both planes ship desaturated so material.color carries the hue, and the NIGHT
-   ITSELF re-inks with the focused beer. At rest it is moonlit snow. */
-const HZ_GOLD = new THREE.Color('#7FA8BD'), HZ_TMP = new THREE.Color();
-const knightTex = loader.load('img/kaldi/knight-grey.png');
-knightTex.colorSpace = THREE.SRGBColorSpace;
-const ridgeTex = loader.load('img/kaldi/ridge-grey.png');
-ridgeTex.colorSpace = THREE.SRGBColorSpace;
+   A winter night in Eyjafjörður, drawn clean: two smooth mountain ridgelines with a
+   moonlit crest, nothing else. The halftone label-art extracts read as stretched
+   noise at horizon opacity and are gone. Each ridge is a solid dark shape whose thin
+   bright crest takes the focused beer's ink, so the NIGHT re-inks with the journey
+   while the shapes stay legible at any width. */
+const HZ_GOLD = new THREE.Color('#9FB8C8'), HZ_TMP = new THREE.Color();
+function ridgeTexture(seed, H_FRAC, jag){
+  const W = 1600, H = 400;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  let rs = seed;
+  const rnd = () => (rs = (rs * 16807) % 2147483647) / 2147483647;
+  const pts = new Float32Array(W);
+  const build = (l, r, dy) => {
+    if (r - l < 24) return;                       /* stop before pixel-scale jitter */
+    const m = (l + r) >> 1;
+    pts[m] = (pts[l] + pts[r]) / 2 + (rnd() - .5) * dy;
+    build(l, m, dy * jag); build(m, r, dy * jag);
+  };
+  pts[0] = H * H_FRAC + (rnd() - .5) * 40;
+  pts[W - 1] = H * H_FRAC + (rnd() - .5) * 40;
+  build(0, W - 1, H * .5);
+  /* linear fill between displaced anchors, then a 13px smooth: a crest is a line,
+     not per-pixel noise — the noise was reading as a comb */
+  let last = 0;
+  for (let i = 1; i < W; i++){
+    if (pts[i] !== 0 || i === W - 1){
+      for (let k = last + 1; k < i; k++)
+        pts[k] = pts[last] + (pts[i] - pts[last]) * (k - last) / (i - last);
+      last = i;
+    }
+  }
+  const sm = new Float32Array(W);
+  for (let i = 0; i < W; i++){
+    let a = 0, n = 0;
+    for (let k = -6; k <= 6; k++){ const j = i + k; if (j >= 0 && j < W){ a += pts[j]; n++; } }
+    sm[i] = a / n;
+  }
+  const img = x.createImageData(W, H);
+  for (let px = 0; px < W; px++){
+    const ry = Math.max(24, Math.min(H - 8, sm[px]));
+    for (let py = 0; py < H; py++){
+      const i = (py * W + px) * 4;
+      const d = py - ry;
+      if (d < -2){ img.data[i+3] = 0; continue; }
+      const crest = Math.exp(-Math.max(0, d) * .30) * 235;
+      const body = 12;                             /* near-black: the shape is the point */
+      const v = Math.max(crest, body);
+      img.data[i] = img.data[i+1] = img.data[i+2] = v;
+      img.data[i+3] = d < 0 ? 255 * (1 - (-d / 2)) : 240;
+    }
+  }
+  x.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
 const mkLand = (tex, opacity) => {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
     new THREE.MeshBasicMaterial({map:tex, transparent:true, opacity,
-      color:HZ_GOLD.clone(), blending:THREE.AdditiveBlending, depthWrite:false}));
+      color:HZ_GOLD.clone(), depthWrite:false}));
   m.renderOrder = -1; scene.add(m); return m;
 };
-const horizon = mkLand(knightTex, .34);     /* the knight the bottles stand before */
-const horizonFar = mkLand(ridgeTex, .12);   /* the peaks, farther and fainter: depth */
+const horizon = mkLand(ridgeTexture(73, .42, .58), .85);      /* near ridge */
+const horizonFar = mkLand(ridgeTexture(291, .34, .52), .32);  /* far ridge, fainter */
 const HZ_Z = -4.2, HZ_FAR_Z = -7.5;
-const HZ_RATIO = 477/1200, HZ_FAR_RATIO = 240/900;   /* each artwork's own aspect */
+const HZ_RATIO = 400/1600, HZ_FAR_RATIO = 400/1600;
 function fitLand(mesh, z, widen, lift, ratio){
   const dist = camera.position.z - z;
   const h = 2 * Math.tan(camera.fov * Math.PI/360) * dist;
-  /* no 7-unit floor here: that floor was tuned for the desert STRIP and it blew the
-     knight up into wallpaper. A figure is allowed to be narrower than the frame. */
-  const pw = Math.max(h * camera.aspect * widen, 2.2);
+  const pw = h * camera.aspect * widen;
   mesh.scale.set(pw, pw * ratio, 1);
   mesh.position.set(mesh.position.x, GROUND_Y + pw * ratio * lift, z);
   mesh.userData.lift = pw * ratio * lift;
 }
 function sizeHorizon(){
-  /* the knight stands NARROWER than the desert did: a figure holding the centre,
-     shoulders just past the line-up, while the far peaks carry the width */
-  fitLand(horizon, HZ_Z, .62, .04, HZ_RATIO);
-  fitLand(horizonFar, HZ_FAR_Z, 1.15, .16, HZ_FAR_RATIO);
+  fitLand(horizon, HZ_Z, 1.35, .06, HZ_RATIO);
+  fitLand(horizonFar, HZ_FAR_Z, 1.75, .12, HZ_FAR_RATIO);
 }
 sizeHorizon();
 
@@ -1559,7 +1639,8 @@ gsap.ticker.add(() => {
   const t = (now-t0)/1000;
   data.focus += (data.focusTarget - data.focus) * Math.min(1, dt*10);
 
-  const idle = Math.sin(t*.44)*.227 + Math.sin(t*.17)*.064;
+  /* half the old sway: the env highlights were sweeping fast enough to strobe */
+  const idle = Math.sin(t*.44)*.11 + Math.sin(t*.17)*.032;
   /* A scrub is a CATCH-UP, not a position: flick the wheel hard and the scroll races
      past while `exit` is still interpolating, which left the fixed stage painting cans
      over sections far below (the "picture following the page down"). The scrub still
@@ -1648,11 +1729,11 @@ gsap.ticker.add(() => {
      ridge slower still, so the room has true depth rather than a backdrop */
   horizon.position.x = -data.focus * .085 - ptr.cx * .05;
   horizon.position.y = GROUND_Y + horizon.userData.lift + yOff * .35;
-  horizon.material.opacity = .34 * vis0;
+  horizon.material.opacity = .85 * vis0;
   horizon.visible = vis0 > .01;
   horizonFar.position.x = -data.focus * .038 - ptr.cx * .02;
   horizonFar.position.y = GROUND_Y + horizonFar.userData.lift + yOff * .2;
-  horizonFar.material.opacity = .12 * vis0;
+  horizonFar.material.opacity = .32 * vis0;
   horizonFar.visible = horizon.visible;
   /* dust drifts; it breathes with the same light the cans live in */
   {
