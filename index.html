@@ -129,9 +129,13 @@ nav .links a.cta:hover{border-color:var(--gull);color:var(--gull)}
 .burger span:last-child{transform:translateY(4px)}
 .burger[aria-expanded="true"] span:first-child{transform:rotate(45deg)}
 .burger[aria-expanded="true"] span:last-child{transform:rotate(-45deg)}
+/* `display:grid` beats the UA's [hidden]{display:none}, which left this fixed
+   full-viewport overlay in the layout on DESKTOP, invisible but swallowing every
+   pointer event on the page. Re-assert the hidden state explicitly. */
 .mobmenu{position:fixed;inset:0;z-index:39;background:rgba(10,14,20,.97);
   display:grid;align-content:center;gap:2px;padding:14vh 28px 8vh;
   overscroll-behavior:contain;opacity:0;transition:opacity .3s var(--ease)}
+.mobmenu[hidden]{display:none}
 .mobmenu.open{opacity:1}
 .mobmenu nav{position:static;display:grid;padding:0;gap:2px}
 .mobmenu a{font-family:var(--disp);font-weight:700;font-size:clamp(1.9rem,8vw,2.6rem);
@@ -1116,9 +1120,9 @@ function hdrGlassEnv(r){
      a CG one. */
   for (let y = 0; y < H; y++){
     const v = y/(H-1);
-    const sky   = .009 * (1 - v * .55);
-    const floor = .006 * (1 - (v - .5) * .9);
-    const seam  = .022 * Math.exp(-Math.pow((v - .5) / .045, 2));
+    const sky   = .005 * (1 - v * .55);
+    const floor = .003 * (1 - (v - .5) * .9);
+    const seam  = .006 * Math.exp(-Math.pow((v - .5) / .045, 2));
     const base  = (v < .5 ? sky : floor) + seam;
     for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=base; d[i+3]=1; }
   }
@@ -1281,36 +1285,84 @@ const glassNoise = (() => {
 /* ONE light recipe for every part of the bottle: the spots stay muted so the whole
    object lives in the strip-light env. A label at full spot power over env-only glass
    is exactly the pasted-on-sticker look. */
-const muteDirect = sh => {
+/* dd = how much direct DIFFUSE survives, ds = how much direct SPECULAR survives.
+   Glass takes ds = 0: the key/under/rim are POINT lights, and a point light on a
+   roughness-.06 cylinder makes an infinitely thin blazing-white vertical line down
+   the edge — that hard stripe was the "not sharp and sleek" artefact. A photographed
+   bottle's highlight is broad because it mirrors a SOFTBOX, so on glass the highlight
+   must come from the environment strips instead. Opaque parts keep their spot
+   specular, which is what makes paper and foil read as lit. */
+const muted = (dd, ds) => sh => {
   sh.fragmentShader = sh.fragmentShader.replace(
     '#include <aomap_fragment>',
     `#include <aomap_fragment>
-     reflectedLight.directDiffuse *= 0.15;
-     reflectedLight.directSpecular *= 0.22;`);
+     reflectedLight.directDiffuse *= ${dd.toFixed(3)};
+     reflectedLight.directSpecular *= ${ds.toFixed(3)};
+     {
+       /* THE limb law, shared by every part of the bottle. Schlick drives reflectance
+          to 1.0 at grazing, and a vertical cylinder's limb samples ONE azimuth at
+          every height — so a single lamp mirrors as a uniform pale stripe down the
+          whole edge. That stripe was drawn independently by the glass AND by the
+          label, which is why fixing one never removed it. Roll the indirect specular
+          off toward the limb and the silhouette goes properly dark. */
+       vec3 nrmL = normalize( vNormal );
+       vec3 vvL  = normalize( vViewPosition );
+       /* Rolloff alone was never going to be enough: the strip lights are HDR values
+          up to 26, so even passing 4% of one still lands above 1.0 and tone-maps to
+          white. The limb therefore needs to go to essentially nothing, and the glass
+          reads the environment at a fraction of the cans' strength. */
+       float gzL = pow( 1.0 - abs( dot( nrmL, vvL ) ), 0.75 );
+       reflectedLight.indirectSpecular *= mix( 1.0, 0.006, gzL );
+     }`);
 };
+const muteDirect = muted(0.15, 0.22);          /* label, neck band, base */
+const muteGlass  = muted(0.10, 0.00);          /* glass: env highlights only */
 const glassFresnel = sh => {
-  /* the key/under/rim spots are tuned for lacquered cans; on dark glass their direct
-     diffuse floods it into milk chocolate and their specular paints the fat edge band.
-     Scale DIRECT terms down inside this material only; the strip-light env survives. */
+  /* Dark glass does NOT glow at its edges. At a grazing angle you are looking through
+     far more glass, so the limb goes DARKER and the silhouette stays crisp; the only
+     bright edges are narrow specular streaks where a lamp actually sits. The previous
+     version had a fresnel emissive with a floor, which lit the whole rim equally and
+     drew a uniform pale keyline around the bottle — a sticker outline, not glass. */
   sh.fragmentShader = sh.fragmentShader.replace(
-    '#include <aomap_fragment>',
-    `#include <aomap_fragment>
-     reflectedLight.directDiffuse *= 0.15;
-     reflectedLight.directSpecular *= 0.22;`);
+    '#include <map_fragment>',
+    `#include <map_fragment>
+     {
+       vec3 nrm0 = normalize( vNormal );
+       vec3 vv0  = normalize( vViewPosition );
+       float g = pow( 1.0 - abs( dot( nrm0, vv0 ) ), 2.2 );
+       diffuseColor.rgb *= mix( 1.0, 0.22, g );   /* absorption toward the limb */
+     }`);
+  /* A vertical cylinder's limb reflects ONE fixed azimuth at every height, so a single
+     lamp sitting there mirrors as a perfectly uniform bright stripe down the whole
+     edge — the pale keyline. Real glass scatters at extreme grazing (and you are
+     seeing the far wall through the curve), so drive roughness up toward the limb:
+     the mirror becomes a dim blur and the crisp highlight retreats inboard, which is
+     where the photograph puts it. */
+  sh.fragmentShader = sh.fragmentShader.replace(
+    '#include <roughnessmap_fragment>',
+    `#include <roughnessmap_fragment>
+     {
+       vec3 nrmR = normalize( vNormal );
+       vec3 vvR  = normalize( vViewPosition );
+       float gz = pow( 1.0 - abs( dot( nrmR, vvR ) ), 2.4 );
+       roughnessFactor = mix( roughnessFactor, 0.34, gz );
+     }`);
   sh.fragmentShader = sh.fragmentShader.replace(
     '#include <emissivemap_fragment>',
     `#include <emissivemap_fragment>
      {
        vec3 nrm = normalize( vNormal );
        vec3 vv  = normalize( vViewPosition );
-       float fr = pow( 1.0 - abs( dot( nrm, vv ) ), 3.4 );
-       /* light through the glass, keyed to where the kicker sits behind-right:
-          a deep amber that only lifts the limbs, never a uniform coat */
-       float back = .3 + .7 * max( 0.0, nrm.x * .55 - nrm.z * .35 + .45 );
-       vec3 amber = vec3( 0.45, 0.16, 0.03 );
-       totalEmissiveRadiance += amber * fr * back * 0.10 * (0.35 + diffuseColor.r * 1.6);
+       float fr = pow( 1.0 - abs( dot( nrm, vv ) ), 3.2 );
+       /* ZERO floor: smoothstep cuts the glow off entirely away from the kicker, so
+          most of the rim gets none and the silhouette reads as an edge, not a stroke */
+       float back = smoothstep( 0.30, 1.0, nrm.x * 0.60 - nrm.z * 0.45 + 0.32 );
+       vec3 amber = vec3( 0.40, 0.14, 0.03 );
+       totalEmissiveRadiance += amber * fr * back * 0.16;
      }`);
+  muteGlass(sh);
 };
+
 const gGlass = new THREE.LatheGeometry(GLASS, segs),
       gGBase = new THREE.LatheGeometry(BOTTLE_BASE, segs);
 /* the crown cap: smooth bright dome + a toothed skirt whose bottom edge IS the
@@ -1353,8 +1405,8 @@ function buildBottle(b){
   const glassM = new THREE.MeshPhysicalMaterial({
     map: glassMap, color: 0xffffff, roughness: .06, metalness: 0,
     roughnessMap: glassNoise,
-    clearcoat: 1, clearcoatRoughness: .07,
-    reflectivity: .8, ior: 1.5, envMapIntensity: 1.0, specularIntensity: 1});
+    clearcoat: 0,
+    reflectivity: .5, ior: 1.5, envMapIntensity: .38, specularIntensity: .9});
   glassM.envMap = glassEnv;
   glassM.onBeforeCompile = glassFresnel;
   /* photo-matched: PALE champagne gold, soft lacquered sheen — broad gentle
@@ -1673,7 +1725,7 @@ const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(
   {type: THREE.HalfFloatType, samples: MSAA}));
 composer.addPass(new RenderPass(scene, camera));
 const bloom = new UnrealBloomPass(
-  new THREE.Vector2(innerWidth*.5, innerHeight*.5), .06, .25, 1.05);
+  new THREE.Vector2(innerWidth*.5, innerHeight*.5), .05, .16, 1.15);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 
