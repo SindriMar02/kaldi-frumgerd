@@ -942,11 +942,19 @@ if (!hasGL) document.documentElement.classList.add('no3d');
 
 /* age gate */
 const gate = document.getElementById('gate');
-const gateShown = sessionStorage.getItem('kld-gate') !== 'ok';
+/* Safari private mode (and locked-down browsers) can THROW on any sessionStorage
+   access, not just refuse it. Unguarded, that throw killed the module before the gate
+   was wired: the page stayed behind an unanswerable overlay with nothing revealed.
+   Remembering the answer is a convenience; failing to remember must cost nothing. */
+const store = {
+  get(k){ try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v){ try { sessionStorage.setItem(k, v); } catch (e) {} },
+};
+const gateShown = store.get('kld-gate') !== 'ok';
 if (!gateShown) gate.classList.add('hide');
 let cinematicEnter = null;   /* assigned by the 3D block; the reveal lives there */
 document.getElementById('gyes').onclick = () => {
-  sessionStorage.setItem('kld-gate','ok');
+  store.set('kld-gate','ok');
   if (reduce) { gate.classList.add('hide'); return; }
   if (cinematicEnter) { cinematicEnter(); return; }
   gsap.to(gate, {opacity:0, duration:.5, ease:'power2.out', onComplete:()=>gate.classList.add('hide')});
