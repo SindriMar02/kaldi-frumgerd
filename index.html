@@ -158,7 +158,11 @@ nav .links a.cta:hover{border-color:var(--gull);color:var(--gull)}
 }
 
 /* ---------- fixed 3D stage (opaque: aluminium can never read transparent) ---------- */
+/* The stage is a BACKDROP. As a fixed, positioned element it paints above static
+   flow content whatever its z-index, so the copy has to be lifted explicitly or the
+   beer headlines end up behind the bottles. */
 #stage{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0}
+main{position:relative;z-index:2}
 #stage canvas{width:100%;height:100%;display:block}
 
 /* content scrolls over the stage */
@@ -1506,6 +1510,28 @@ const cans = BEERS.map(b => {
 
 /* real lighting: shadow-mapped key + soft ground catcher + rim separation */
 const GROUND_Y = -.585;
+/* A real floor: a cold sheen that is brightest just under the row and falls away
+   into the night, so the surface reads as polished and dark rather than as a warm
+   haze. Drawn under everything, additive, no depth write. */
+const floorTex = (() => {
+  const N = 256, c = document.createElement('canvas'); c.width = c.height = N;
+  const x = c.getContext('2d');
+  const g = x.createRadialGradient(N/2, N*.34, 4, N/2, N*.34, N*.62);
+  g.addColorStop(0,   'rgba(150,178,198,.30)');
+  g.addColorStop(.28, 'rgba(120,148,170,.13)');
+  g.addColorStop(.62, 'rgba(80,104,126,.045)');
+  g.addColorStop(1,   'rgba(0,0,0,0)');
+  x.fillStyle = g; x.fillRect(0, 0, N, N);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
+const floorSheen = new THREE.Mesh(new THREE.PlaneGeometry(16, 9),
+  new THREE.MeshBasicMaterial({map:floorTex, transparent:true, depthWrite:false,
+    blending:THREE.AdditiveBlending, opacity:.55}));
+floorSheen.rotation.x = -Math.PI/2;
+floorSheen.position.set(0, GROUND_Y + .001, -1.1);
+floorSheen.renderOrder = -1;
+scene.add(floorSheen);
+
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30),
   new THREE.ShadowMaterial({opacity:.5}));
 ground.rotation.x = -Math.PI/2; ground.position.y = GROUND_Y;
@@ -1574,8 +1600,8 @@ const aoTex = (() => {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 })();
 const aos = cans.map(() => {
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.0,.42),
-    new THREE.MeshBasicMaterial({map:aoTex, transparent:true, depthWrite:false, opacity:.55}));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(.66,.28),
+    new THREE.MeshBasicMaterial({map:aoTex, transparent:true, depthWrite:false, opacity:.8}));
   m.rotation.x = -Math.PI/2; m.renderOrder = 3; scene.add(m); return m;
 });
 
@@ -1588,7 +1614,7 @@ const glowTex = (() => {
   x.fillStyle = g; x.fillRect(0,0,256,256);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 })();
-const glow = new THREE.Mesh(new THREE.PlaneGeometry(3.6, 1.5),
+const glow = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.0),
   new THREE.MeshBasicMaterial({map:glowTex, transparent:true, depthWrite:false,
     blending:THREE.AdditiveBlending, color:new THREE.Color('#C8502E'), opacity:.13}));
 glow.rotation.x = -Math.PI/2; glow.position.y = GROUND_Y + .002; glow.renderOrder = 4; scene.add(glow);
@@ -1610,7 +1636,10 @@ glow.rotation.x = -Math.PI/2; glow.position.y = GROUND_Y + .002; glow.renderOrde
    while the shapes stay legible at any width. */
 const HZ_GOLD = new THREE.Color('#9FB8C8'), HZ_TMP = new THREE.Color();
 function ridgeTexture(seed, H_FRAC, jag){
-  const W = 1600, H = 400;
+  /* H is deliberately tall: the crest lives in the top fifth and the near-black body
+     runs all the way down, so the ground never ENDS mid-frame and let the ink-tinted
+     background show through underneath it as a hard brown slab. */
+  const W = 1600, H = 1000, CREST = 300;
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
   let rs = seed;
@@ -1622,9 +1651,9 @@ function ridgeTexture(seed, H_FRAC, jag){
     pts[m] = (pts[l] + pts[r]) / 2 + (rnd() - .5) * dy;
     build(l, m, dy * jag); build(m, r, dy * jag);
   };
-  pts[0] = H * H_FRAC + (rnd() - .5) * 40;
-  pts[W - 1] = H * H_FRAC + (rnd() - .5) * 40;
-  build(0, W - 1, H * .5);
+  pts[0] = CREST * H_FRAC + (rnd() - .5) * 40;
+  pts[W - 1] = CREST * H_FRAC + (rnd() - .5) * 40;
+  build(0, W - 1, CREST * .5);
   /* linear fill between displaced anchors, then a 13px smooth: a crest is a line,
      not per-pixel noise — the noise was reading as a comb */
   let last = 0;
@@ -1643,7 +1672,7 @@ function ridgeTexture(seed, H_FRAC, jag){
   }
   const img = x.createImageData(W, H);
   for (let px = 0; px < W; px++){
-    const ry = Math.max(24, Math.min(H - 8, sm[px]));
+    const ry = Math.max(18, Math.min(CREST, sm[px]));
     for (let py = 0; py < H; py++){
       const i = (py * W + px) * 4;
       const d = py - ry;
@@ -1669,7 +1698,7 @@ const mkLand = (tex, opacity) => {
 const horizon = mkLand(ridgeTexture(73, .42, .58), .85);      /* near ridge */
 const horizonFar = mkLand(ridgeTexture(291, .34, .52), .32);  /* far ridge, fainter */
 const HZ_Z = -4.2, HZ_FAR_Z = -7.5;
-const HZ_RATIO = 400/1600, HZ_FAR_RATIO = 400/1600;
+const HZ_RATIO = 1000/1600, HZ_FAR_RATIO = 1000/1600;
 function fitLand(mesh, z, widen, lift, ratio){
   const dist = camera.position.z - z;
   const h = 2 * Math.tan(camera.fov * Math.PI/360) * dist;
@@ -1679,8 +1708,8 @@ function fitLand(mesh, z, widen, lift, ratio){
   mesh.userData.lift = pw * ratio * lift;
 }
 function sizeHorizon(){
-  fitLand(horizon, HZ_Z, 1.35, .06, HZ_RATIO);
-  fitLand(horizonFar, HZ_FAR_Z, 1.75, .12, HZ_FAR_RATIO);
+  fitLand(horizon, HZ_Z, 1.35, -.22, HZ_RATIO);
+  fitLand(horizonFar, HZ_FAR_Z, 1.75, -.15, HZ_FAR_RATIO);
 }
 sizeHorizon();
 
@@ -1777,7 +1806,10 @@ function applyFlavorDOM(){
   panels.forEach((el, i) => {
     const d = Math.abs(f - i);
     /* quantised well below perception: 1/1000 opacity, 1/20 px */
-    const a = Math.round(Math.max(0, 1 - d * 1.5) * act * 1000) / 1000;
+    /* 2.4, not 1.5: at 1.5 two neighbouring panels both sat around 0.2-0.3 through
+       the middle of every transition, stacked in the same place, which reads as
+       doubled mush rather than a crossfade. */
+    const a = Math.round(Math.max(0, 1 - d * 2.4) * act * 1000) / 1000;
     const y = Math.round((f - i) * 600) / 20;
     const st = panelState[i];
     if (a !== st.a){
@@ -1811,7 +1843,7 @@ function applyFlavorDOM(){
   HZ_TMP.copy(HZ_GOLD).lerp(INK, .65 * act);
   horizon.material.color.copy(HZ_TMP);
   horizonFar.material.color.copy(HZ_TMP);
-  if (tintScene) data.bg.copy(BLACK).lerp(INK, .12 * act);   /* black room until the journey begins */
+  if (tintScene) data.bg.copy(BLACK).lerp(INK, .06 * act);   /* black room until the journey begins */
 
   const idx = Math.round(f);
   if (idx !== lastIdx){
@@ -1928,15 +1960,34 @@ gsap.ticker.add(() => {
      stays fully opaque until its own body has cleared the frame edge, then fades
      over the last stretch — it slides out, it never cuts. */
   const halfW = Math.tan(camera.fov * Math.PI/360) * camera.position.z * camera.aspect;
-  const outA = halfW + .30, outB = halfW + .95;
+  /* The fade-out zone and parking distance are both measured from the frame edge, so
+     the fixed desktop margins are enormous relative to a phone's half-width and make
+     the vessels rocket across the screen. Scale them to the frame. */
+  const wide = innerWidth >= 900;
+  const outA = halfW + (wide ? .30 : .12), outB = halfW + (wide ? .95 : .40);
   /* collapsed spacing is derived from the frame, not hard-coded: whatever the
      viewport, the neighbours are exactly far enough out to have left it */
-  const sep = data.spread + (1 - data.spread) * ((outB + .45) / SPACING);
+  /* How far the neighbours are parked once the row collapses. The padding beyond the
+     frame edge has to shrink on a narrow screen: at desktop padding the outgoing and
+     incoming vessels are BOTH outside a phone's frame through the middle of every
+     transition, so the stage simply goes empty. */
+  const pad = innerWidth >= 900 ? .45 : .08;
+  const sep = data.spread + (1 - data.spread) * ((outB + pad) / SPACING);
   canBoxes.length = 0;
+  window.__kldBoxes = canBoxes;
   camera.updateMatrixWorld();
   cans.forEach((can, i) => {
     const rel = i - data.focus;
-    const x = data.x + rel * SPACING * sep;
+    /* As the establishing row collapses, the whole carousel settles RIGHT of centre.
+       The copy lives in the left column, and measurement showed vessels transiting
+       straight across it (up to 37% of a readable panel sat over a bottle). The shift
+       only applies once the row has collapsed, so the wide hero composition is
+       untouched. */
+    /* ONLY where the copy actually sits beside the stage. Below 900 the strip is a
+       single column (text above, product below) so there is nothing to clear, and a
+       bias there simply pushed the bottle off the side of a phone. */
+    const bias = innerWidth >= 900 ? .34 : 0;
+    const x = data.x + rel * SPACING * sep + bias * (1 - data.spread);
     const ax = Math.abs(x);
     const e = Math.min(1, Math.max(0, (ax - outA) / (outB - outA)));
     const vis = 1 - e*e*(3 - 2*e);   /* smoothstep, so the last of the fade has no edge */
@@ -1991,6 +2042,8 @@ gsap.ticker.add(() => {
       projTo(x + dm.r*s, can.position.y, can.position.z, _b);
       let top = 0; projTo(x, can.position.y + dm.h*s, can.position.z, PRJ2); top = PRJ2.y;
       canBoxes.push({i, left:_a.x, right:_b.x, top, bottom:_b.y, vis});
+      /* exposed for qa/_panels.mjs: are the copy panels ever under a vessel? */
+      if (!window.__kldBoxes) window.__kldBoxes = [];
     }
   });
   /* the land travels with the journey at a fraction of the carousel's motion, the far
@@ -2017,9 +2070,12 @@ gsap.ticker.add(() => {
     dust.visible = vis0 > .01;
   }
   ground.position.y = gy;
+  floorSheen.position.y = gy + .001;
+  floorSheen.material.opacity = .55 * vis0;
+  floorSheen.visible = vis0 > .01;
   mirrorClip.constant = gy;
   glow.position.set(data.x, gy + .002, 0);
-  glow.material.opacity = .13 * vis0 * (data.spread < .5 ? 1.5 : 1);
+  glow.material.opacity = .085 * vis0 * (data.spread < .5 ? 1.5 : 1);
   ptr.cx += (ptr.x - ptr.cx) * Math.min(1, dt*3);
   ptr.cy += (ptr.y - ptr.cy) * Math.min(1, dt*3);
   camera.position.x = ptr.cx * .16;
