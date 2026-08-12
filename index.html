@@ -852,8 +852,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { BARREL, TOP, BASE, SEAM } from './proto/can-profile.js';
-import { GLASS, BOTTLE_BASE, CAP, BOTTLE_H, LABEL_LO, LABEL_HI, NECK_LO, NECK_HI,
-         CAP_FLUTES, CAP_FLUTE_LO, CAP_FLUTE_HI } from './proto/bottle-profile.js';
+import { GLASS, BOTTLE_BASE, BOTTLE_H, LABEL_LO, LABEL_HI, NECK_LO, NECK_HI,
+         buildCrownCap } from './proto/bottle-profile.js';
 
 /* All facts, ABVs and descriptions from bruggsmidjan.is/bjorarnir, read 2026-08-11.
    IPA's 6,0% is read off the label itself; Neipa's ABV is not published anywhere we
@@ -1116,9 +1116,9 @@ function hdrGlassEnv(r){
      a CG one. */
   for (let y = 0; y < H; y++){
     const v = y/(H-1);
-    const sky   = .014 * (1 - v * .55);
+    const sky   = .009 * (1 - v * .55);
     const floor = .006 * (1 - (v - .5) * .9);
-    const seam  = .040 * Math.exp(-Math.pow((v - .5) / .045, 2));
+    const seam  = .022 * Math.exp(-Math.pow((v - .5) / .045, 2));
     const base  = (v < .5 ? sky : floor) + seam;
     for (let x = 0; x < W; x++){ const i = (y*W+x)*4; d[i]=d[i+1]=d[i+2]=base; d[i+3]=1; }
   }
@@ -1308,42 +1308,15 @@ const glassFresnel = sh => {
           a deep amber that only lifts the limbs, never a uniform coat */
        float back = .3 + .7 * max( 0.0, nrm.x * .55 - nrm.z * .35 + .45 );
        vec3 amber = vec3( 0.45, 0.16, 0.03 );
-       totalEmissiveRadiance += amber * fr * back * 0.16 * (0.35 + diffuseColor.r * 1.6);
+       totalEmissiveRadiance += amber * fr * back * 0.10 * (0.35 + diffuseColor.r * 1.6);
      }`);
 };
 const gGlass = new THREE.LatheGeometry(GLASS, segs),
       gGBase = new THREE.LatheGeometry(BOTTLE_BASE, segs);
-/* A crown cap is the one part of this bottle a lathe cannot describe: its skirt is
-   crimped into 21 lobes that bulge outward AND hang lower than the slots between
-   them, which is exactly what the eye reads as "bottle cap". So the lathe is built
-   dense and then displaced per-vertex, and the normals are recomputed so the lobes
-   catch the strip lights individually. */
-const gCap = (() => {
-  const g = new THREE.LatheGeometry(CAP, CAP_FLUTES * 8);   // 8 samples per flute
-  const pos = g.attributes.position;
-  const v = new THREE.Vector3();
-  for (let i = 0; i < pos.count; i++){
-    v.fromBufferAttribute(pos, i);
-    const r = Math.hypot(v.x, v.z);
-    if (r < 1e-5) continue;
-    const th = Math.atan2(v.z, v.x);
-    const ymm = v.y * 100;
-    const t = Math.max(0, Math.min(1, (CAP_FLUTE_HI - ymm) / (CAP_FLUTE_HI - CAP_FLUTE_LO)));
-    if (t <= 0) continue;
-    /* wide lobes, narrow slots: flattening the cosine peaks matches the photo, where
-       the metal is mostly lobe and the gaps are thin dark slits */
-    let f = .5 + .5 * Math.cos(CAP_FLUTES * th);
-    f = Math.pow(f, .6);
-    const nr = r * (1 + .034 * t * (f - .45));
-    v.x = Math.cos(th) * nr; v.z = Math.sin(th) * nr;
-    /* the bottom edge is scalloped: lobes hang below the slots */
-    const vt = Math.max(0, Math.min(1, (222.2 - ymm) / 2.8));
-    v.y -= .009 * vt * f;
-    pos.setXYZ(i, v.x, v.y, v.z);
-  }
-  g.computeVertexNormals();
-  return g;
-})();
+/* the crown cap: smooth bright dome + a toothed skirt whose bottom edge IS the
+   tooth wave — see bottle-profile.js. DoubleSide because the notches expose the
+   skirt's inner face. */
+const capParts = buildCrownCap();
 const mm = v => v * .01;
 const LABEL_ARCS = {1:112, 2:112, 3:122, 4:118, 5:118, 8:114};
 /* The label's die-cut outline is a superellipse (a diamond for the IPA), so it is
@@ -1380,18 +1353,18 @@ function buildBottle(b){
   const glassM = new THREE.MeshPhysicalMaterial({
     map: glassMap, color: 0xffffff, roughness: .06, metalness: 0,
     roughnessMap: glassNoise,
-    clearcoat: 1, clearcoatRoughness: .09,
-    reflectivity: .8, ior: 1.5, envMapIntensity: 1.42, specularIntensity: 1});
+    clearcoat: 1, clearcoatRoughness: .07,
+    reflectivity: .8, ior: 1.5, envMapIntensity: 1.0, specularIntensity: 1});
   glassM.envMap = glassEnv;
   glassM.onBeforeCompile = glassFresnel;
-  /* photo-matched: a crown cap is lacquered brass, brighter and yellower than the
-     aluminium of the cans, with a faint orange-peel from the lacquer */
-  const capM = new THREE.MeshPhysicalMaterial({color: 0xD8B25C, metalness: .95,
-    roughness: .24, roughnessMap: brushed,
-    clearcoat: .85, clearcoatRoughness: .16,
-    envMapIntensity: 1.5});
+  /* photo-matched: PALE champagne gold, soft lacquered sheen — broad gentle
+     highlights, never mirror, never blotchy (the brushed roughnessMap read as cloth) */
+  const capM = new THREE.MeshPhysicalMaterial({color: 0xD9B968, metalness: .9,
+    roughness: .3, clearcoat: .35, clearcoatRoughness: .3,
+    envMapIntensity: 1.35, side: THREE.DoubleSide});
   capM.envMap = glassEnv;
-  capM.onBeforeCompile = muteDirect;
+  /* deliberately NOT muteDirect: the cap is the brightest thing on the real bottle,
+     lit hard by the studio key — the one part of the bottle the spots should touch */
   const bBaseM = new THREE.MeshPhysicalMaterial({color: 0x140a04, roughness: .3,
     metalness: 0, clearcoat: .7, envMapIntensity: .5, side: THREE.DoubleSide});
   bBaseM.envMap = glassEnv;
@@ -1400,7 +1373,7 @@ function buildBottle(b){
   const vessel = new THREE.Group();
   vessel.scale.setScalar(TRUE_SCALE);
   vessel.add(new THREE.Mesh(gGlass, glassM), new THREE.Mesh(gGBase, bBaseM),
-             new THREE.Mesh(gCap, capM));
+             new THREE.Mesh(capParts.dome, capM), new THREE.Mesh(capParts.skirt, capM));
 
   /* die-cut body label: cylinder segment at the dewarp's own arc */
   const arc = THREE.MathUtils.degToRad(LABEL_ARCS[b.asset] || 112);
@@ -2206,15 +2179,16 @@ glassM2.envMap = glassEnv;
 glassM2.onBeforeCompile = glassFresnel;
 const bottle2 = new THREE.Group();
 {
+  const cap2M = new THREE.MeshPhysicalMaterial({color: 0xD9B968, metalness: .9,
+    roughness: .3, clearcoat: .35, clearcoatRoughness: .3,
+    envMapIntensity: 1.35, side: THREE.DoubleSide});
   const bArc = THREE.MathUtils.degToRad(112);
   const blh = mm(LABEL_HI - LABEL_LO);
   bottle2.add(new THREE.Mesh(gGlass, glassM2),
               new THREE.Mesh(gGBase, new THREE.MeshPhysicalMaterial({color: 0x140a04,
                 roughness: .3, metalness: 0, clearcoat: .7, envMapIntensity: .5,
                 side: THREE.DoubleSide})),
-              new THREE.Mesh(gCap, new THREE.MeshPhysicalMaterial({color: 0xD8B25C,
-                metalness: .95, roughness: .24, roughnessMap: brushed,
-                clearcoat: .85, clearcoatRoughness: .16, envMapIntensity: 1.5})));
+              new THREE.Mesh(capParts.dome, cap2M), new THREE.Mesh(capParts.skirt, cap2M));
   const lg = new THREE.CylinderGeometry(mm(30.55), mm(30.55), blh, 96, 1, true, -bArc/2, bArc);
   const lm2 = new THREE.MeshStandardMaterial({color: 0xd8d6d2, roughness: .58,
     metalness: 0, envMapIntensity: .38, transparent: true,

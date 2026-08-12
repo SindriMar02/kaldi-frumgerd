@@ -34,30 +34,53 @@ export const BOTTLE_BASE = vec([
   [0.0, 6.0], [6.0, 5.2], [10.0, 3.6], [13.0, 1.8], [15.0, 0.0],
 ]);
 
-// Gold crown cap. A crown's silhouette is NOT a smooth cone: a flat top disc
-// overhangs a skirt of 21 scalloped lobes that bulge outward and hang lower than the
-// slots between them. The profile below carries the disc and the rim roll; the flutes
-// themselves are applied as a radial + vertical displacement in crownCapGeometry(),
-// because a lathe is rotationally symmetric by definition.
-export const CAP = vec([
-  [14.95, 219.4],   // skirt bottom edge (scalloped by the displacement)
-  [15.05, 220.6],
-  [15.10, 222.5],
-  [15.15, 224.5],
-  [15.20, 226.2],   // top of the flute zone
-  [15.35, 227.4],   // the disc overhangs the skirt
-  [15.40, 228.4],   // flat rim band: the crisp horizontal highlight in the photo
-  [15.20, 229.4],   // rim rolls over
-  [14.60, 230.2],
-  [12.80, 230.9],
-  [ 9.00, 231.3],
-  [ 4.50, 231.5],
-  [ 0.00, 231.6],
-]);
+// Crown cap, built from the photograph rather than imagined. What the real cap is:
+// a BRIGHT pale-gold smooth dome that overhangs, a fairly smooth skirt that widens
+// going DOWN, and 21 separated droplet teeth at the bottom with dark notches between
+// them — the glass shows through the notches, so the teeth must be real silhouette,
+// not a displacement ripple. (The displaced-ripple version read as cloth.)
+export function buildCrownCap(){
+  const S = .01;
+  // dome + rim + smooth upper skirt as a lathe (all smooth on the real cap)
+  const dome = new THREE.LatheGeometry([
+    [0.0, 231.6],[4.5, 231.5],[9.0, 231.3],[12.6, 230.9],[14.2, 230.3],
+    [14.85,229.6],[15.05,228.9],[15.10,228.2],
+  ].map(([r,y]) => new THREE.Vector2(r*S, y*S)), 168);
 
-export const CAP_FLUTES = 21;          // the real count on a crown cap
-export const CAP_FLUTE_LO = 219.4;     // mm: flutes are full strength here
-export const CAP_FLUTE_HI = 227.2;     // mm: and gone by here
+  // the toothed skirt: a parametric sheet whose BOTTOM EDGE is the tooth wave
+  const FL = 21, COLS = FL*14, ROWS = 8;
+  const yTop = 228.2, teethTop = 224.6, teethDepth = 2.6;
+  const rTop = 15.10, rBot = 15.75;             // the skirt flares outward downward
+  const pos = [], uvs = [], idx = [];
+  for (let j = 0; j <= ROWS; j++){
+    const v = j / ROWS;
+    for (let i = 0; i <= COLS; i++){
+      const th = i / COLS * Math.PI * 2;
+      const w = Math.pow(.5 + .5*Math.cos(FL*th), .8);     // 1 at tooth centre, 0 at notch
+      /* the photo's teeth are broad rounded droplets, not points: the DEPTH follows a
+         flattened wave (sqrt) so each tooth bottoms out wide, while the notch stays
+         narrow */
+      const yBot = teethTop - teethDepth * Math.sqrt(w);
+      const y = yTop + (yBot - yTop) * v;
+      let r = rTop + (rBot - rTop) * v;
+      r += .18 * w * v;                                    // teeth bulge a whisker
+      if (v > .82) r -= (v - .82) * 2.2 * w;               // tips curl inward to grip
+      pos.push(Math.cos(th)*r*S, y*S, Math.sin(th)*r*S);
+      uvs.push(i/COLS, v);
+    }
+  }
+  for (let j = 0; j < ROWS; j++)
+    for (let i = 0; i < COLS; i++){
+      const a = j*(COLS+1)+i, b = a+1, c = a+COLS+1, d = c+1;
+      idx.push(a,c,b, b,c,d);
+    }
+  const skirt = new THREE.BufferGeometry();
+  skirt.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  skirt.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  skirt.setIndex(idx);
+  skirt.computeVertexNormals();
+  return { dome, skirt };
+}
 
 // Where things live on the glass (mm from bottle bottom):
 export const BODY_R = 30.0;          // body radius
